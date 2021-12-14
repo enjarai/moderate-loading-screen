@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 enjarai
  * Copyright (c) 2021 darkerbit
  * Copyright (c) 2021 wafflecoffee
  * Copyright (c) 2020 TeamMidnightDust (MidnightConfig only)
@@ -22,15 +23,18 @@
  * SOFTWARE.
  */
 
-package coffee.waffle.qls.config;
+package nl.enjarai.mls.config;
 
-import coffee.waffle.qls.QuiltLoadingScreen;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import me.shedaniel.autoconfig.AutoConfig;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
   @Override
   public ConfigScreenFactory<?> getModConfigScreenFactory() {
-    return parent -> MidnightConfig.getScreen(parent, QuiltLoadingScreen.MODID);
+    return parent -> AutoConfig.getConfigScreen(ModConfig.class, parent).get();
   }
 }

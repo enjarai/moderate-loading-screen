@@ -1,10 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "quilt-loading-screen",
-  "version": "2.2.2",
-  "name": "Quilt Loading Screen",
-  "description": "Makes Minecraft loading screen look like the banner of the QuiltMC Community Server.",
+  "id": "moderate-loading-screen",
+  "version": "1.0.0",
+  "name": "Mod-erate Loading Screen",
+  "description": "An \"alternative\" to Mod Menu that's a lot less usable. (full feature parity not included)",
   "authors": [
+    "enjarai",
     "darkerbit",
     "Emmaffle"
   ],
@@ -13,15 +14,18 @@
     "sources": "https://github.com/wafflecoffee/quilt-loading-screen"
   },
   "license": "MIT",
-  "icon": "assets/quilt-loading-screen/icon.png",
+  "icon": "assets/moderate-loading-screen/icon.png",
   "environment": "client",
   "entrypoints": {
+    "client": [
+      "nl.enjarai.mls.ModerateLoadingScreen"
+    ],
     "modmenu": [
-      "coffee.waffle.qls.config.ModMenuIntegration"
+      "nl.enjarai.mls.config.ModMenuIntegration"
     ]
   },
   "mixins": [
-    "quilt-loading-screen.mixins.json"
+    "moderate-loading-screen.mixins.json"
   ],
   "suggests": {
     "modmenu": "*"

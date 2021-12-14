@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 enjarai
  * Copyright (c) 2021 darkerbit
  * Copyright (c) 2021 wafflecoffee
  * Copyright (c) 2020 TeamMidnightDust (MidnightConfig only)
@@ -22,18 +23,36 @@
  * SOFTWARE.
  */
 
-package coffee.waffle.qls.config;
+package nl.enjarai.mls.config;
 
-import coffee.waffle.qls.QuiltLoadingScreen;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
-public class Config extends MidnightConfig {
-  @Entry public static boolean prideQuiltsEnabled = false;
+@Config(name = "moderate-loading-screen")
+public class ModConfig implements ConfigData {
+    @ConfigEntry.Gui.Excluded
+    public static ModConfig INSTANCE;
 
-  public static boolean isPrideQuiltsEnabled() {
-    return prideQuiltsEnabled;
-  }
+    public static void init()
+    {
+        AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
+        INSTANCE = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+    }
 
-  public static void initConfig() {
-    init(QuiltLoadingScreen.MODID, Config.class);
-  }
+    @ConfigEntry.ColorPicker
+    @Comment("Determines the background color of the loading screen")
+    public int backgroundColor = 0x161616;
+
+    @Comment("If true, summons the holy tater")
+    public boolean showTater = true;
+
+    @Comment("If true, every mod only falls down the screen once")
+    public boolean modsOnlyOnce = false;
+
+    @Comment("Average size of falling icons")
+    public int iconSize = 32;
 }

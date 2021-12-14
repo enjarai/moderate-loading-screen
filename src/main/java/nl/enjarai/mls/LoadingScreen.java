@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 enjarai
  * Copyright (c) 2021 darkerbit
  * Copyright (c) 2021 wafflecoffee
  * Copyright (c) 2020 TeamMidnightDust (MidnightConfig only)
@@ -22,35 +23,32 @@
  * SOFTWARE.
  */
 
-package coffee.waffle.qls;
+package nl.enjarai.mls;
 
-import coffee.waffle.qls.config.Config;
-import coffee.waffle.qls.mixin.DrawableHelperAccessor;
+import nl.enjarai.mls.config.ModConfig;
+import nl.enjarai.mls.mixin.DrawableHelperAccessor;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.BackgroundHelper;
+import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
+import org.apache.commons.lang3.Validate;
 
-import java.time.LocalDate;
-import java.time.Month;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
-public class QuiltLoadingScreen {
-  public static final String MODID = "quilt-loading-screen";
-
-  public static final int BACKGROUND_COLOR = BackgroundHelper.ColorMixer.getArgb(0, 35, 22, 56);
-
-  private static final Identifier PATCH_TEXTURE =
-          new Identifier(MODID, "textures/gui/patch.png");
-
-  private static final Identifier PRIDE_TEXTURE =
-          new Identifier(MODID, "textures/gui/community_quilt.png");
-
-  private static final int PATCH_COUNT = 16;
+public class LoadingScreen {
+  public static final String MODID = "moderate-loading-screen";
 
   private final int patchSize;
 
@@ -62,30 +60,54 @@ public class QuiltLoadingScreen {
 
   private float patchTimer = 0f;
 
-  private boolean prideMonth;
+  private final ArrayList<Identifier> icons = new ArrayList<>();
 
-  public QuiltLoadingScreen(MinecraftClient client) {
+  public LoadingScreen(MinecraftClient client) {
     this.client = client;
 
-    prideMonth = LocalDate.now().getMonth() == Month.JUNE;
+    patchSize = ModConfig.INSTANCE.iconSize;
 
-    Config.initConfig();
+    // Construct list of mod icons, main principles copied from mod menu
+    for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
+      ModMetadata metadata = mod.getMetadata();
 
-    if (Config.isPrideQuiltsEnabled()) prideMonth = true;
+      String path = metadata.getIconPath(128).orElse("assets/" + metadata.getId() + "/icon.png");
+      NativeImageBackedTexture texture = getIconTexture(mod, path);
 
-    patchSize = prideMonth ? 20 : 24;
+      if (texture != null) {
+        Identifier iconLocation = new Identifier(MODID, metadata.getId() + "_icon");
 
-    createPatch(prideMonth ? 12 : 8); // summons the holy pineapple
+        this.client.getTextureManager().registerTexture(iconLocation, texture);
+        icons.add(iconLocation);
+      }
+    }
+
+    // Summon the holy tater if enabled
+    if (ModConfig.INSTANCE.showTater) createPatch(new Identifier(MODID, "textures/gui/tiny_potato.png"));
   }
 
-  public void createPatch(int type) {
+  public NativeImageBackedTexture getIconTexture(ModContainer iconSource, String iconPath) {
+    try {
+      Path path = iconSource.getPath(iconPath);
+      try (InputStream inputStream = Files.newInputStream(path)) {
+        NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
+        Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
+        return new NativeImageBackedTexture(image);
+      }
+
+    } catch (Throwable t) {
+      return null;
+    }
+  }
+
+  public void createPatch(Identifier texture) {
     fallingPatches.add(new FallingPatch(
             random.nextDouble() * this.client.getWindow().getScaledWidth(), -patchSize, 0,
             (random.nextDouble() - 0.5) * 0.6,
             random.nextDouble() * 3.0 + 1.0,
             (random.nextDouble() - 0.5) * 6.0,
             random.nextDouble() / 2 + 0.5,
-            type, patchSize
+            texture, patchSize
     ));
   }
 
@@ -97,12 +119,19 @@ public class QuiltLoadingScreen {
       patch.update(delta);
     }
 
-    patchTimer -= delta;
+    if (!icons.isEmpty()) {
+      patchTimer -= delta;
 
-    if (patchTimer < 0f && !ending) {
-      createPatch(random.nextInt(prideMonth ? 12 : 8));
+      if (patchTimer < 0f && !ending) {
+        Identifier icon = icons.get(random.nextInt(icons.size()));
 
-      patchTimer = random.nextFloat();
+        if (ModConfig.INSTANCE.modsOnlyOnce) {
+          icons.remove(icon);
+        }
+        createPatch(icon);
+
+        patchTimer = random.nextFloat();
+      }
     }
   }
 
@@ -111,19 +140,19 @@ public class QuiltLoadingScreen {
     if (delta < 2.0f)
       updatePatches(delta, ending);
 
-    RenderSystem.setShaderTexture(0, prideMonth ? PRIDE_TEXTURE : PATCH_TEXTURE);
     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     RenderSystem.enableBlend();
     RenderSystem.defaultBlendFunc();
 
     for (FallingPatch patch : fallingPatches) {
+      RenderSystem.setShaderTexture(0, patch.texture);
       patch.render(matrices, client.options.monochromeLogo);
     }
   }
 
   private static class FallingPatch {
     private double x, y, rot;
-    private final int type;
+    private final Identifier texture;
 
     private final double horizontal, rotSpeed;
     private final double scale;
@@ -132,7 +161,7 @@ public class QuiltLoadingScreen {
 
     private final int patchSize;
 
-    public FallingPatch(double x, double y, double rot, double horizontal, double fallSpeed, double rotSpeed, double scale, int type, int patchSize) {
+    public FallingPatch(double x, double y, double rot, double horizontal, double fallSpeed, double rotSpeed, double scale, Identifier texture, int patchSize) {
       this.x = x;
       this.y = y;
       this.rot = rot;
@@ -143,7 +172,7 @@ public class QuiltLoadingScreen {
 
       this.scale = scale;
 
-      this.type = type;
+      this.texture = texture;
 
       this.patchSize = patchSize;
     }
@@ -168,15 +197,15 @@ public class QuiltLoadingScreen {
       double x2 = patchSize / (double) 2;
       double y2 = patchSize / (double) 2;
 
-      float u0 = 1.0f / PATCH_COUNT * type;
-      float u1 = u0 + 1.0f / PATCH_COUNT;
+//      float u0 = 1.0f / PATCH_COUNT * type;
+//      float u1 = u0 + 1.0f / PATCH_COUNT;
 
       float offset = monochrome ? 0.5f : 0.0f;
 
-      DrawableHelperAccessor.quiltLoadingScreen$drawTexturedQuad(
+      DrawableHelperAccessor.loadingScreen$drawTexturedQuad(
               matrix,
               (int) x1, (int) x2, (int) y1, (int) y2, 0,
-              u0, u1, 0.0f + offset, 0.5f + offset
+              0.0f, 1.0f, 0.0f + offset, 1.0f + offset
       );
 
       matrices.pop();

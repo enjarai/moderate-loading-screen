@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 enjarai
  * Copyright (c) 2021 darkerbit
  * Copyright (c) 2021 wafflecoffee
  * Copyright (c) 2020 TeamMidnightDust (MidnightConfig only)
@@ -22,14 +23,15 @@
  * SOFTWARE.
  */
 
-package coffee.waffle.qls.mixin;
+package nl.enjarai.mls.mixin;
 
-import coffee.waffle.qls.QuiltLoadingScreen;
+import nl.enjarai.mls.LoadingScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.gui.screen.SplashOverlay;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.ResourceReload;
+import nl.enjarai.mls.config.ModConfig;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -54,14 +56,14 @@ public abstract class SplashOverlayMixin extends Overlay {
     throw new UnsupportedOperationException("Shadowed method somehow called outside mixin. Exorcise your computer.");
   }
 
-  private QuiltLoadingScreen quiltLoadingScreen$loadingScreen;
+  private LoadingScreen loadingScreen$loadingScreen;
 
   @Inject(
           method = "<init>(Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/resource/ResourceReload;Ljava/util/function/Consumer;Z)V",
           at = @At("TAIL")
   )
   private void constructor(MinecraftClient client, ResourceReload monitor, Consumer<Optional<Throwable>> exceptionHandler, boolean reloading, CallbackInfo ci) {
-    quiltLoadingScreen$loadingScreen = new QuiltLoadingScreen(this.client);
+    loadingScreen$loadingScreen = new LoadingScreen(this.client);
   }
 
   // Replace the colour used for the background fill of the splash screen
@@ -74,7 +76,7 @@ public abstract class SplashOverlayMixin extends Overlay {
     if (this.client.options.monochromeLogo)
       return in;
 
-    return withAlpha(QuiltLoadingScreen.BACKGROUND_COLOR, in >> 24); // Use existing transparency
+    return withAlpha(ModConfig.INSTANCE.backgroundColor, in >> 24); // Use existing transparency
   }
 
   // For some reason Mojang decided to not use `fill` in a specific case so I have to replace a local variable
@@ -84,7 +86,7 @@ public abstract class SplashOverlayMixin extends Overlay {
           ordinal = 4 // int m (or int o according to mixin apparently)
   )
   private int changeColorGl(int in) {
-    return this.client.options.monochromeLogo ? in : QuiltLoadingScreen.BACKGROUND_COLOR;
+    return this.client.options.monochromeLogo ? in : ModConfig.INSTANCE.backgroundColor;
   }
 
   // Render before third getWindow to render before the logo
@@ -95,6 +97,6 @@ public abstract class SplashOverlayMixin extends Overlay {
   )
   private void renderPatches(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci,
                              int i, int j, long l, float f) {
-    quiltLoadingScreen$loadingScreen.renderPatches(matrices, delta, f >= 1.0f);
+    loadingScreen$loadingScreen.renderPatches(matrices, delta, f >= 1.0f);
   }
 }
