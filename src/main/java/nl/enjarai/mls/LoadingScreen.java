@@ -197,15 +197,10 @@ public class LoadingScreen {
       double x2 = patchSize / (double) 2;
       double y2 = patchSize / (double) 2;
 
-//      float u0 = 1.0f / PATCH_COUNT * type;
-//      float u1 = u0 + 1.0f / PATCH_COUNT;
-
-      float offset = monochrome ? 0.5f : 0.0f;
-
       DrawableHelperAccessor.loadingScreen$drawTexturedQuad(
               matrix,
               (int) x1, (int) x2, (int) y1, (int) y2, 0,
-              0.0f, 1.0f, 0.0f + offset, 1.0f + offset
+              0.0f, 1.0f, 0.0f, 1.0f
       );
 
       matrices.pop();
