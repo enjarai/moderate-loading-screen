@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "moderate-loading-screen",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "Mod-erate Loading Screen",
   "description": "An \"alternative\" to Mod Menu that's a lot less usable. (full feature parity not included)",
   "authors": [
@@ -10,8 +10,8 @@
     "Emmaffle"
   ],
   "contact": {
-    "issues": "https://github.com/wafflecoffee/quilt-loading-screen/issues",
-    "sources": "https://github.com/wafflecoffee/quilt-loading-screen"
+    "issues": "https://github.com/enjarai/moderate-loading-screen/issues",
+    "sources": "https://github.com/enjarai/moderate-loading-screen"
   },
   "license": "MIT",
   "icon": "assets/moderate-loading-screen/icon.png",
@@ -29,5 +29,8 @@
   ],
   "suggests": {
     "modmenu": "*"
+  },
+  "depends": {
+    "fabric": "*"
   }
 }
