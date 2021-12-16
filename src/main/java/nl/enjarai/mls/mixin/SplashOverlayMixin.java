@@ -25,13 +25,15 @@
 
 package nl.enjarai.mls.mixin;
 
-import nl.enjarai.mls.LoadingScreen;
+import nl.enjarai.mls.screens.SnowFlakesScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.gui.screen.SplashOverlay;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.ResourceReload;
 import nl.enjarai.mls.config.ModConfig;
+import nl.enjarai.mls.screens.LoadingScreen;
+import nl.enjarai.mls.screens.StackingScreen;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -63,7 +65,10 @@ public abstract class SplashOverlayMixin extends Overlay {
           at = @At("TAIL")
   )
   private void constructor(MinecraftClient client, ResourceReload monitor, Consumer<Optional<Throwable>> exceptionHandler, boolean reloading, CallbackInfo ci) {
-    loadingScreen$loadingScreen = new LoadingScreen(this.client);
+    loadingScreen$loadingScreen = switch (ModConfig.INSTANCE.screenType) {
+      case SNOWFLAKES -> new SnowFlakesScreen(this.client);
+      case STACKING -> new StackingScreen(this.client);
+    };
   }
 
   // Replace the colour used for the background fill of the splash screen

@@ -23,41 +23,42 @@
  * SOFTWARE.
  */
 
-package nl.enjarai.mls;
+package nl.enjarai.mls.screens;
 
-import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
-import nl.enjarai.mls.config.ModConfig;
-import net.fabricmc.api.ClientModInitializer;
-import nl.enjarai.mls.config.ScreenTypes;
-import nl.enjarai.mls.screens.LoadingScreen;
-import org.apache.commons.lang3.Validate;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Objects;
+public class StackingScreen extends LoadingScreen {
 
-public class ModerateLoadingScreen implements ClientModInitializer {
-    public static final String MODID = "moderate-loading-screen";
 
-    @Override
-    public void onInitializeClient() {
-        ModConfig.init();
+    public StackingScreen(MinecraftClient client) {
+        super(client);
     }
 
-    public static NativeImageBackedTexture getIconTexture(ModContainer iconSource, String iconPath) {
-        try {
-            Path path = iconSource.getPath(iconPath);
-            try (InputStream inputStream = Files.newInputStream(path)) {
-                NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
-                Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
-                return new NativeImageBackedTexture(image);
-            }
+    @Override
+    public void createPatch(Identifier texture) {
+        patches.add(new Patch(
+                random.nextDouble() * this.client.getWindow().getScaledWidth(), -patchSize, 0,
+                4.0,
+                texture, patchSize
+        ));
+    }
 
-        } catch (Throwable t) {
-            return null;
+    @Override
+    protected void processPhysics(float delta, boolean ending) {
+
+    }
+
+    protected static class Patch extends LoadingScreen.Patch {
+        public Patch(double x, double y, double fallSpeed, double scale, Identifier texture, int patchSize) {
+            super(x, y, 0, 0, fallSpeed, 0, scale, texture, patchSize);
+        }
+
+        @Override
+        public void update(float delta) {
+            double distance = fallSpeed * delta;
+            // TODO physics here
+            y += distance;
         }
     }
 }
