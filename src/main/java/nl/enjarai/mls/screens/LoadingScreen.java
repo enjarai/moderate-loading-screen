@@ -48,7 +48,7 @@ public abstract class LoadingScreen {
     protected final ArrayList<Identifier> icons = new ArrayList<>();
     protected final Random random = new Random();
     protected final ArrayList<Patch> patches = new ArrayList<>();
-    protected float patchTimer = 0f;
+    protected double patchTimer = 0f;
 
     public LoadingScreen(MinecraftClient client) {
         patchSize = ModConfig.INSTANCE.iconSize;
@@ -89,9 +89,21 @@ public abstract class LoadingScreen {
                 }
                 createPatch(icon);
 
-                patchTimer = random.nextFloat();
+                patchTimer = getPatchTimer();
             }
         }
+    }
+
+    protected double getPatchTimer() {
+        return random.nextFloat();
+    }
+
+    protected double getOffsetX() {
+        return 0;
+    }
+
+    protected double getOffsetY() {
+        return 0;
     }
 
     protected void processPhysics(float delta, boolean ending) {
@@ -114,7 +126,7 @@ public abstract class LoadingScreen {
 
         for (Patch patch : patches) {
             RenderSystem.setShaderTexture(0, patch.texture);
-            patch.render(matrices, client.options.monochromeLogo);
+            patch.render(matrices, getOffsetX(), getOffsetY());
         }
     }
 
@@ -128,6 +140,8 @@ public abstract class LoadingScreen {
         public double fallSpeed;
 
         protected final int patchSize;
+
+        private boolean locked = false;
 
         public Patch(double x, double y, double rot, double horizontal, double fallSpeed, double rotSpeed, double scale, Identifier texture, int patchSize) {
             this.x = x;
@@ -152,9 +166,9 @@ public abstract class LoadingScreen {
             rot += rotSpeed * delta;
         }
 
-        public void render(MatrixStack matrices, boolean monochrome) {
+        public void render(MatrixStack matrices, double offsetX, double offsetY) {
             matrices.push();
-            matrices.translate(x, y, 0);
+            matrices.translate(x + offsetX, y + offsetY, 0);
 
             Matrix4f matrix = matrices.peek().getModel();
             matrix.multiply(new Quaternion(0.0f, 0.0f, (float) rot, true));
@@ -172,6 +186,18 @@ public abstract class LoadingScreen {
             );
 
             matrices.pop();
+        }
+
+        public void lock() {
+            locked = true;
+        }
+
+        public void unlock() {
+            locked = false;
+        }
+
+        public boolean getLock() {
+            return locked;
         }
     }
 }

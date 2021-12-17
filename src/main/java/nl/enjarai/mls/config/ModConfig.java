@@ -44,18 +44,30 @@ public class ModConfig implements ConfigData {
     }
 
     @ConfigEntry.ColorPicker
-    @Comment("Determines the background color of the loading screen")
+    //@Comment("Determines the background color of the loading screen")
+    @ConfigEntry.Gui.Tooltip
     public int backgroundColor = 0x161616;
 
-    @Comment("If true, summons the holy tater")
+//    @Comment("If true, summons the holy tater")
+    @ConfigEntry.Gui.Tooltip
     public boolean showTater = true;
 
-    @Comment("If true, every mod only falls down the screen once")
+//    @Comment("If true, every mod only falls down the screen once")
+    @ConfigEntry.Gui.Tooltip
     public boolean modsOnlyOnce = false;
 
-    @Comment("Average size of falling icons")
-    public int iconSize = 30;
+//    @Comment("Average size of falling icons")
+    @ConfigEntry.Gui.Tooltip
+    public int iconSize = 32;
 
-    @Comment("add description of every type here") //TODO
-    public ScreenTypes screenType = ScreenTypes.SNOWFLAKES;
+//    @Comment("add description of every type here") //TODO
+    @ConfigEntry.Gui.Tooltip
+    public ScreenTypes screenType = ScreenTypes.SNOWFLAKES; //TODO better dropdown?
+
+    @ConfigEntry.Gui.CollapsibleObject()
+    public StackingConfig stackingConfig = new StackingConfig();
+    public static class StackingConfig {
+        @ConfigEntry.Gui.Tooltip
+        public double cycleSeconds = 10;
+    }
 }
