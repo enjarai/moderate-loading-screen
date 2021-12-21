@@ -30,7 +30,6 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "moderate-loading-screen")
 public class ModConfig implements ConfigData {
@@ -44,30 +43,28 @@ public class ModConfig implements ConfigData {
     }
 
     @ConfigEntry.ColorPicker
-    //@Comment("Determines the background color of the loading screen")
     @ConfigEntry.Gui.Tooltip
     public int backgroundColor = 0x161616;
 
-//    @Comment("If true, summons the holy tater")
     @ConfigEntry.Gui.Tooltip
     public boolean showTater = true;
 
-//    @Comment("If true, every mod only falls down the screen once")
     @ConfigEntry.Gui.Tooltip
     public boolean modsOnlyOnce = false;
 
-//    @Comment("Average size of falling icons")
     @ConfigEntry.Gui.Tooltip
-    public int iconSize = 32;
+    @ConfigEntry.BoundedDiscrete(min = 8, max = 128)
+    public int iconSize = 48;
 
-//    @Comment("add description of every type here") //TODO
-    @ConfigEntry.Gui.Tooltip
-    public ScreenTypes screenType = ScreenTypes.SNOWFLAKES; //TODO better dropdown?
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    @ConfigEntry.Gui.Tooltip(count = 3)
+    public ScreenTypes screenType = ScreenTypes.SNOWFLAKES;
 
     @ConfigEntry.Gui.CollapsibleObject()
     public StackingConfig stackingConfig = new StackingConfig();
     public static class StackingConfig {
-        @ConfigEntry.Gui.Tooltip
-        public double cycleSeconds = 10;
+        @ConfigEntry.Gui.Tooltip(count = 2)
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 60)
+        public int cycleSeconds = 20;
     }
 }

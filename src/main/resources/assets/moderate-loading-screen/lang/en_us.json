@@ -1,7 +1,19 @@
 {
-  "text.autoconfig.moderate-loading-screen.title": "\u00a7lMod-erate loading screen",
+  "text.autoconfig.moderate-loading-screen.title": "§lMod-erate loading screen",
   "text.autoconfig.moderate-loading-screen.option.backgroundColor": "Background Color",
+  "text.autoconfig.moderate-loading-screen.option.backgroundColor.@Tooltip": "Determines the background color of the loading screen",
   "text.autoconfig.moderate-loading-screen.option.showTater": "Show tiny potato",
+  "text.autoconfig.moderate-loading-screen.option.showTater.@Tooltip": "If true, summons the holy tater",
   "text.autoconfig.moderate-loading-screen.option.modsOnlyOnce": "Show every mod only once",
-  "text.autoconfig.moderate-loading-screen.option.iconSize": "Icon Size"
+  "text.autoconfig.moderate-loading-screen.option.modsOnlyOnce.@Tooltip": "If true, every mod only falls down the screen once",
+  "text.autoconfig.moderate-loading-screen.option.iconSize": "Icon Size",
+  "text.autoconfig.moderate-loading-screen.option.iconSize.@Tooltip": "Average size of falling icons",
+  "text.autoconfig.moderate-loading-screen.option.screenType": "Icon Behavior",
+  "text.autoconfig.moderate-loading-screen.option.screenType.@Tooltip[0]": "Defines the behavior of falling icons.",
+  "text.autoconfig.moderate-loading-screen.option.screenType.@Tooltip[1]": "SNOWFLAKES: Icons fall down the screen like snowflakes (default)",
+  "text.autoconfig.moderate-loading-screen.option.screenType.@Tooltip[2]": "STACKING: Icons stack neatly into a grid, filling up the screen",
+  "text.autoconfig.moderate-loading-screen.option.stackingConfig": "STACKING Mode Options",
+  "text.autoconfig.moderate-loading-screen.option.stackingConfig.cycleSeconds": "Fill Time",
+  "text.autoconfig.moderate-loading-screen.option.stackingConfig.cycleSeconds.@Tooltip[0]": "Time it takes for the screen to fill up in seconds.",
+  "text.autoconfig.moderate-loading-screen.option.stackingConfig.cycleSeconds.@Tooltip[1]": "For best results, set this to the average time it takes for your game to load."
 }

@@ -49,6 +49,7 @@ public abstract class LoadingScreen {
     protected final Random random = new Random();
     protected final ArrayList<Patch> patches = new ArrayList<>();
     protected double patchTimer = 0f;
+    protected boolean tatered = false;
 
     public LoadingScreen(MinecraftClient client) {
         patchSize = ModConfig.INSTANCE.iconSize;
@@ -68,12 +69,19 @@ public abstract class LoadingScreen {
                 icons.add(iconLocation);
             }
         }
-
-        // Summon the holy tater if enabled
-        if (ModConfig.INSTANCE.showTater) createPatch(new Identifier(ModerateLoadingScreen.MODID, "textures/gui/tiny_potato.png"));
     }
 
     public abstract void createPatch(Identifier texture);
+
+    protected Identifier getNextTexture() {
+        // Summon the holy tater if enabled
+        if (ModConfig.INSTANCE.showTater && !tatered) {
+            tatered = true;
+            return new Identifier(ModerateLoadingScreen.MODID, "textures/gui/tiny_potato.png");
+        }
+
+        return icons.get(random.nextInt(icons.size()));
+    }
 
     public void updatePatches(float delta, boolean ending) {
         processPhysics(delta, ending);
@@ -82,7 +90,7 @@ public abstract class LoadingScreen {
             patchTimer -= delta;
 
             if (patchTimer < 0f && !ending) {
-                Identifier icon = icons.get(random.nextInt(icons.size()));
+                Identifier icon = getNextTexture();
 
                 if (ModConfig.INSTANCE.modsOnlyOnce) {
                     icons.remove(icon);
@@ -141,8 +149,6 @@ public abstract class LoadingScreen {
 
         protected final int patchSize;
 
-        private boolean locked = false;
-
         public Patch(double x, double y, double rot, double horizontal, double fallSpeed, double rotSpeed, double scale, Identifier texture, int patchSize) {
             this.x = x;
             this.y = y;
@@ -186,18 +192,6 @@ public abstract class LoadingScreen {
             );
 
             matrices.pop();
-        }
-
-        public void lock() {
-            locked = true;
-        }
-
-        public void unlock() {
-            locked = false;
-        }
-
-        public boolean getLock() {
-            return locked;
         }
     }
 }

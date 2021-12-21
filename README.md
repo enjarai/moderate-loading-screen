@@ -14,4 +14,8 @@ I'd recommend installing the Mod Menu mod to access the configs.
 
 ![Screenshot of Loading Screen](https://i.imgur.com/3eBLOJq.png)
 
+Also has an option to stack falling icons neatly instead of dumping them everywhere.
+
+![Screenshot of other mode](https://i.imgur.com/ELxwmY3.png)
+
 Heavily based on and inspired by [Quilt Loading Screen](https://github.com/wafflecoffee/quilt-loading-screen)

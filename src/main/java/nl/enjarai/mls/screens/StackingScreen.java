@@ -29,12 +29,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import nl.enjarai.mls.config.ModConfig;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class StackingScreen extends LoadingScreen {
     protected final HashMap<Double, Double> stacksHeight = new HashMap<>();
-    protected final double scroll = 0;
+    protected final HashMap<Integer, Integer> patchesInColumn = new HashMap<>();
+    protected double scroll = 0;
+    protected double scrollDelta = 0;
 
     public StackingScreen(MinecraftClient client) {
         super(client);
@@ -42,22 +43,52 @@ public class StackingScreen extends LoadingScreen {
 
     @Override
     public void createPatch(Identifier texture) {
-        patches.add(new Patch(
-                random.nextInt(client.getWindow().getScaledWidth() / patchSize + 1) * patchSize,
-                -patchSize - client.getWindow().getScaledHeight() + scroll,
-                8 * getPatchesPerSecond(), 1.0,
-                texture, patchSize
-        ));
+        Integer column = pickPatchColumn();
+
+        if (column != null) {
+            patches.add(new Patch(
+                    column * patchSize - (patchSize / 2d),
+                    -patchSize - client.getWindow().getScaledHeight() + scroll,
+                    0, 0, 8 * getPatchesPerSecond(),
+                    0, 1.0, texture, patchSize
+            ));
+            patchesInColumn.compute(column, (k, v) -> (v == null) ? 1 : v+1);
+        }
+    }
+
+    protected Integer pickPatchColumn() {
+        int width = (int) Math.ceil(client.getWindow().getScaledWidth() / (double) patchSize);
+        int height = (int) Math.ceil(client.getWindow().getScaledHeight() / (double) patchSize);
+
+        double totalWeight = 0.0;
+        for (int i = 0; i <= width; i++) {
+            totalWeight += getColumnWeight(height, i);
+        }
+
+        if (totalWeight > 0.0) {
+            double r = random.nextDouble() * totalWeight;
+            for (int i = 0; i <= width; i++) {
+                r -= getColumnWeight(height, i);
+                if (r <= 0.0) return i;
+            }
+        }
+        return null;
+    }
+
+    protected double getColumnWeight(int height, int column) {
+        Integer patchesAmount = patchesInColumn.get(column);
+        return height - (patchesAmount == null ? 0 : patchesAmount);
     }
 
     protected double getPatchesPerSecond() {
-        return ((client.getWindow().getScaledWidth() / 32f + 1) * (client.getWindow().getScaledHeight() / 32f + 1))
+        return ((client.getWindow().getScaledWidth() / (double) patchSize + 1) *
+                (client.getWindow().getScaledHeight() / (double) patchSize + 1))
                 / ModConfig.INSTANCE.stackingConfig.cycleSeconds / 2;
     }
 
     @Override
     protected double getPatchTimer() {
-        return 4 / getPatchesPerSecond();
+        return 6 / getPatchesPerSecond();
     }
 
     @Override
@@ -72,44 +103,24 @@ public class StackingScreen extends LoadingScreen {
 
     @Override
     protected void processPhysics(float delta, boolean ending) {
-        for (LoadingScreen.Patch patch : patches) {
-            if (ending) {
-                patch.unlock();
-                patch.fallSpeed *= 1.0 + delta / 3;
-            }
+        if (ending) {
+            scrollDelta *= 1.0 + delta / 3;
+            if (scrollDelta == 0) scrollDelta = 0.5;
+            scroll += scrollDelta;
+        }
 
-            if (!patch.getLock()) {
+        for (Patch patch : patches) {
+            if (patch.fallSpeed != 0) {
                 patch.update(delta);
 
-                if (!ending) {
-                    Double stackHeight = stacksHeight.get(patch.x);
-                    stackHeight = stackHeight == null ? -patchSize / 2 : stackHeight;
-                    if (patch.y > stackHeight) {
-                        patch.y = stackHeight;
-                        patch.lock();
-                        stacksHeight.put(patch.x, patch.y - patchSize);
-                    }
+                Double stackHeight = stacksHeight.get(patch.x);
+                stackHeight = stackHeight == null ? -patchSize / 2 : stackHeight;
+                if (patch.y > stackHeight) {
+                    patch.y = stackHeight;
+                    patch.fallSpeed = 0;
+                    stacksHeight.put(patch.x, patch.y - patchSize);
                 }
             }
-        }
-    }
-
-    protected static class Patch extends LoadingScreen.Patch {
-
-        public Patch(double x, double y, double fallSpeed, double scale, Identifier texture, int patchSize) {
-            super(x, y, 0, 0, fallSpeed, 0, scale, texture, patchSize);
-        }
-
-        public static int getBlockX(double x, int patchSize) {
-            return (int) (x / patchSize);
-        }
-
-        public static int getBlockY(double y, int patchSize) {
-            return (int) -(y / patchSize);
-        }
-
-        public static double getRealY(int blockY, int patchSize) {
-            return -blockY * patchSize;
         }
     }
 }
