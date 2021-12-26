@@ -26,11 +26,7 @@
 package nl.enjarai.mls.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
@@ -45,38 +41,25 @@ import java.util.Random;
 public abstract class LoadingScreen {
     protected final int patchSize;
     protected final MinecraftClient client;
-    protected final ArrayList<Identifier> icons = new ArrayList<>();
+    protected final ArrayList<Identifier> icons;
     protected final Random random = new Random();
     protected final ArrayList<Patch> patches = new ArrayList<>();
     protected double patchTimer = 0f;
-    protected boolean tatered = false;
+    protected boolean tater = ModConfig.INSTANCE.showTater;
 
     public LoadingScreen(MinecraftClient client) {
         patchSize = ModConfig.INSTANCE.iconSize;
         this.client = client;
 
-        // Construct list of mod icons, main principles copied from mod menu
-        for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
-            ModMetadata metadata = mod.getMetadata();
-
-            String path = metadata.getIconPath(128).orElse("assets/" + metadata.getId() + "/icon.png");
-            NativeImageBackedTexture texture = ModerateLoadingScreen.getIconTexture(mod, path);
-
-            if (texture != null) {
-                Identifier iconLocation = new Identifier(ModerateLoadingScreen.MODID, metadata.getId() + "_icon");
-
-                this.client.getTextureManager().registerTexture(iconLocation, texture);
-                icons.add(iconLocation);
-            }
-        }
+        icons = ModerateLoadingScreen.compileIconList();
     }
 
     public abstract void createPatch(Identifier texture);
 
     protected Identifier getNextTexture() {
         // Summon the holy tater if enabled
-        if (ModConfig.INSTANCE.showTater && !tatered) {
-            tatered = true;
+        if (tater) {
+            tater = false;
             return new Identifier(ModerateLoadingScreen.MODID, "textures/gui/tiny_potato.png");
         }
 

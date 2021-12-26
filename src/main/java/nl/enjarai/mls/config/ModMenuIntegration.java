@@ -28,13 +28,30 @@ package nl.enjarai.mls.config;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.gui.ConfigScreenProvider;
+import me.shedaniel.cloth.api.client.events.v0.ScreenHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.TranslatableText;
 
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
-  @Override
-  public ConfigScreenFactory<?> getModConfigScreenFactory() {
-    return parent -> AutoConfig.getConfigScreen(ModConfig.class, parent).get();
-  }
+    @Override
+    @SuppressWarnings("deprecation")
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
+        return parent -> {
+            ConfigScreenProvider<ModConfig> supplier = (ConfigScreenProvider<ModConfig>) AutoConfig.getConfigScreen(ModConfig.class, parent);
+            supplier.setBuildFunction(builder -> {
+                builder.setAfterInitConsumer(screen -> {
+                    ((ScreenHooks) screen).cloth$addDrawableChild(new ButtonWidget(screen.width - 104, 4, 100, 20, new TranslatableText("text.moderate-loading-screen.testButton"), button -> {
+                        MinecraftClient.getInstance().reloadResources();
+                    }));
+                });
+                return builder.build();
+            });
+            return supplier.get();
+        };
+    }
 }

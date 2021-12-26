@@ -1,4 +1,5 @@
 {
+  "text.moderate-loading-screen.testButton": "Preview",
   "text.autoconfig.moderate-loading-screen.title": "§lMod-erate loading screen",
   "text.autoconfig.moderate-loading-screen.option.backgroundColor": "Background Color",
   "text.autoconfig.moderate-loading-screen.option.backgroundColor.@Tooltip": "Determines the background color of the loading screen",
@@ -6,6 +7,12 @@
   "text.autoconfig.moderate-loading-screen.option.showTater.@Tooltip": "If true, summons the holy tater",
   "text.autoconfig.moderate-loading-screen.option.modsOnlyOnce": "Show every mod only once",
   "text.autoconfig.moderate-loading-screen.option.modsOnlyOnce.@Tooltip": "If true, every mod only falls down the screen once",
+  "text.autoconfig.moderate-loading-screen.option.hideLibraries": "Hide library mods",
+  "text.autoconfig.moderate-loading-screen.option.hideLibraries.@Tooltip[0]": "Hides mods marked as with the \"Library\" badge.",
+  "text.autoconfig.moderate-loading-screen.option.hideLibraries.@Tooltip[1]": "Note: not all library mods mark themselves as such, use the blacklist to hide ones that dont.",
+  "text.autoconfig.moderate-loading-screen.option.modIdBlacklist": "Mod id blacklist",
+  "text.autoconfig.moderate-loading-screen.option.modIdBlacklist.@Tooltip[0]": "Use bash pattern matching to hide certain mods by id.",
+  "text.autoconfig.moderate-loading-screen.option.modIdBlacklist.@Tooltip[1]": "Default configuration excludes the ten million submods of Fabric Api.",
   "text.autoconfig.moderate-loading-screen.option.iconSize": "Icon Size",
   "text.autoconfig.moderate-loading-screen.option.iconSize.@Tooltip": "Average size of falling icons",
   "text.autoconfig.moderate-loading-screen.option.screenType": "Icon Behavior",

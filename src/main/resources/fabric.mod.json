@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "moderate-loading-screen",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "name": "Mod-erate Loading Screen",
   "description": "An \"alternative\" to Mod Menu that's a lot less usable. (full feature parity not included)",
   "authors": [

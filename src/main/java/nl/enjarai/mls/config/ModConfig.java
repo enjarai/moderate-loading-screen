@@ -31,6 +31,9 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @Config(name = "moderate-loading-screen")
 public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Excluded
@@ -51,6 +54,15 @@ public class ModConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip
     public boolean modsOnlyOnce = false;
+
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public boolean hideLibraries = false;
+
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public ArrayList<String> modIdBlacklist = new ArrayList<>(Arrays.asList(
+            "fabric-*",
+            "fabric"
+    ));
 
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(min = 8, max = 128)
