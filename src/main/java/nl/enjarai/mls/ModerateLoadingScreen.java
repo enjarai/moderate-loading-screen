@@ -25,6 +25,7 @@
 
 package nl.enjarai.mls;
 
+import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -41,6 +42,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ModerateLoadingScreen implements ClientModInitializer {
@@ -49,6 +51,12 @@ public class ModerateLoadingScreen implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModConfig.init();
+        if (ModConfig.INSTANCE.modIdBlacklist.isEmpty()) {
+            ModConfig.INSTANCE.modIdBlacklist.addAll(List.of(new String[]{
+                    "fabric-*",
+                    "fabric"
+            }));
+        }
     }
 
     // Construct list of mod icons, main principles copied from mod menu

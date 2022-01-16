@@ -59,10 +59,7 @@ public class ModConfig implements ConfigData {
     public boolean hideLibraries = false;
 
     @ConfigEntry.Gui.Tooltip(count = 2)
-    public ArrayList<String> modIdBlacklist = new ArrayList<>(Arrays.asList(
-            "fabric-*",
-            "fabric"
-    ));
+    public ArrayList<String> modIdBlacklist = new ArrayList<>();
 
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(min = 8, max = 128)
