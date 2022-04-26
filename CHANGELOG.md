@@ -1,0 +1,2 @@
+- Fixed config not saving when clicking the preview button in the config
+- Added config options for Mojang logo and loading bar opacity

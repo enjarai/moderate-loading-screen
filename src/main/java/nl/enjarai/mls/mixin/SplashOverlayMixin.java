@@ -25,7 +25,7 @@
 
 package nl.enjarai.mls.mixin;
 
-import nl.enjarai.mls.screens.SnowFlakesScreen;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.gui.screen.SplashOverlay;
@@ -33,6 +33,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.ResourceReload;
 import nl.enjarai.mls.config.ModConfig;
 import nl.enjarai.mls.screens.LoadingScreen;
+import nl.enjarai.mls.screens.SnowFlakesScreen;
 import nl.enjarai.mls.screens.StackingScreen;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -103,5 +104,36 @@ public abstract class SplashOverlayMixin extends Overlay {
   private void renderPatches(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci,
                              int i, int j, long l, float f) {
     loadingScreen$loadingScreen.renderPatches(matrices, delta, f >= 1.0f);
+  }
+
+  // Modify logo transparency if needed, multiplies with the original to ensure transitions work normally
+  @ModifyArg(
+          method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V",
+          at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V"),
+          index = 3
+  )
+  private float modifyLogoTransparency(float original) {
+    return original * ModConfig.INSTANCE.logoOpacity;
+  }
+
+  // Reset RenderSystem shader color to prevent rendering everything else with the modified transparency
+  @Inject(
+          method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V",
+          at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;defaultBlendFunc()V"),
+          locals = LocalCapture.CAPTURE_FAILSOFT
+  )
+  private void resetTransparency(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci,
+                                 int i, int j, long l, float f, float g, float h) {
+    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, h);
+  }
+
+  // Modify loading bar transparency if needed, again multiplying with the original
+  @ModifyArg(
+          method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V",
+          at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/SplashOverlay;renderProgressBar(Lnet/minecraft/client/util/math/MatrixStack;IIIIF)V"),
+          index = 5
+  )
+  private float modifyBarTransparency(float original) {
+    return original * ModConfig.INSTANCE.barOpacity;
   }
 }

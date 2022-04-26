@@ -30,6 +30,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.gui.ConfigScreenProvider;
 import me.shedaniel.cloth.api.client.events.v0.ScreenHooks;
+import me.shedaniel.clothconfig2.api.ConfigScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -46,6 +47,7 @@ public class ModMenuIntegration implements ModMenuApi {
             supplier.setBuildFunction(builder -> {
                 builder.setAfterInitConsumer(screen -> {
                     ((ScreenHooks) screen).cloth$addDrawableChild(new ButtonWidget(screen.width - 104, 4, 100, 20, new TranslatableText("text.moderate-loading-screen.testButton"), button -> {
+                        ((ConfigScreen) screen).saveAll(false);
                         MinecraftClient.getInstance().reloadResources();
                     }));
                 });

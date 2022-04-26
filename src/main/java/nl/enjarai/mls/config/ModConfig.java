@@ -32,7 +32,6 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @Config(name = "moderate-loading-screen")
 public class ModConfig implements ConfigData {
@@ -48,6 +47,14 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.ColorPicker
     @ConfigEntry.Gui.Tooltip
     public int backgroundColor = 0x161616;
+
+    @ConfigEntry.BoundedDiscrete(max = 1)
+    @ConfigEntry.Gui.Tooltip
+    public float logoOpacity = 1;
+
+    @ConfigEntry.BoundedDiscrete(max = 1)
+    @ConfigEntry.Gui.Tooltip
+    public float barOpacity = 1;
 
     @ConfigEntry.Gui.Tooltip
     public boolean showTater = true;
