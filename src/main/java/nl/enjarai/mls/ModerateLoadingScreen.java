@@ -25,7 +25,6 @@
 
 package nl.enjarai.mls;
 
-import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
