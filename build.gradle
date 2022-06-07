@@ -1,22 +1,11 @@
-//file:noinspection GroovyAssignabilityCheck
 plugins {
-  id "fabric-loom" version "0.10.+"
-  id "com.modrinth.minotaur" version "1.2.+"
-  id "org.cadixdev.licenser" version "0.6.+"
-  id "maven-publish"
+  id 'fabric-loom' version '0.11-SNAPSHOT'
+  id 'maven-publish'
 }
 
-String mod_version = loom.modVersion
-String minecraft_version = "1.17.1"
-String yarn_mappings = "62"           // https://fabricmc.net/versions.html
-String loader_version = "0.12.2"      // https://fabricmc.net/versions.html
-String fabric_version = "0.45.0+1.17" // https://fabricmc.net/versions.html
-String modmenu_version = "2.0.14"     // https://modrinth.com/mod/modmenu/versions
-String cloth_config_version = "5.2.47"
-String cloth_api_version = "2.0.54"
-
-archivesBaseName = "moderate-loading-screen"
-version = mod_version + "+1.17-1.18"
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
 
 repositories {
   maven { url "https://maven.quiltmc.org/repository/release/" }
@@ -25,33 +14,67 @@ repositories {
 }
 
 dependencies {
-  minecraft "com.mojang:minecraft:${minecraft_version}"
-  mappings "net.fabricmc:yarn:${minecraft_version}+build.${yarn_mappings}:v2"
-  modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-  modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+  // To change the versions see the gradle.properties file
+  minecraft "com.mojang:minecraft:${project.minecraft_version}"
+  mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+  modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-  modImplementation "com.terraformersmc:modmenu:${modmenu_version}"
-  modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+  // Fabric API. This is technically optional, but you probably want it anyway.
+  modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+  // Mod Menu integration.
+  modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+  // Cloth Config
+  modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
     exclude group: "net.fabricmc.fabric-api"
   }
-  modApi "me.shedaniel.cloth.api:cloth-client-events-v0:${cloth_api_version}"
-  include "me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}"
-  include "me.shedaniel.cloth.api:cloth-client-events-v0:${cloth_api_version}"
+//  modApi "me.shedaniel.cloth.api:cloth-client-events-v0:${project.cloth_api_version}"
 }
 
-tasks.withType(JavaCompile) { it.options.encoding = "UTF-8" }
+processResources {
+  inputs.property "version", project.version
 
-jar { from("LICENSE") }
+  filesMatching("fabric.mod.json") {
+    expand "version": project.version
+  }
+}
 
-//task modrinth(type: com.modrinth.minotaur.TaskModrinthUpload) {
-//  onlyIf { System.getenv("MODRINTH") }
-//  token = System.getenv("MODRINTH")
-//  projectId = "VPU6VYVP"
-//  versionNumber = mod_version
-//  versionType = "RELEASE"
-//  uploadFile = remapJar
-//  addGameVersion minecraft_version
-//  addLoader "fabric"
-//}
+tasks.withType(JavaCompile).configureEach {
+  // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+  it.options.release = 17
+}
 
-java { withSourcesJar() }
+java {
+  // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+  // if it is present.
+  // If you remove this line, sources will not be generated.
+  withSourcesJar()
+}
+
+jar {
+  from("LICENSE") {
+    rename { "${it}_${project.archivesBaseName}"}
+  }
+}
+
+// configure the maven publication
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+
+  // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+  repositories {
+    // Add repositories to publish to here.
+    // Notice: This block does NOT have the same function as the block in the top level.
+    // The repositories here will be used for publishing your artifact, not for
+    // retrieving dependencies.
+  }
+}
+
+loom {
+  accessWidenerPath = file("src/main/resources/moderate-loading-screen.accesswidener")
+}

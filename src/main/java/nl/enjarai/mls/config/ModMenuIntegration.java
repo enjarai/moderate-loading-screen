@@ -29,13 +29,12 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.gui.ConfigScreenProvider;
-import me.shedaniel.cloth.api.client.events.v0.ScreenHooks;
 import me.shedaniel.clothconfig2.api.ConfigScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
@@ -46,7 +45,7 @@ public class ModMenuIntegration implements ModMenuApi {
             ConfigScreenProvider<ModConfig> supplier = (ConfigScreenProvider<ModConfig>) AutoConfig.getConfigScreen(ModConfig.class, parent);
             supplier.setBuildFunction(builder -> {
                 builder.setAfterInitConsumer(screen -> {
-                    ((ScreenHooks) screen).cloth$addDrawableChild(new ButtonWidget(screen.width - 104, 4, 100, 20, new TranslatableText("text.moderate-loading-screen.testButton"), button -> {
+                    screen.addDrawableChild(new ButtonWidget(screen.width - 104, 4, 100, 20, Text.translatable("text.moderate-loading-screen.testButton"), button -> {
                         ((ConfigScreen) screen).saveAll(false);
                         MinecraftClient.getInstance().reloadResources();
                     }));

@@ -79,7 +79,7 @@ public abstract class SplashOverlayMixin extends Overlay {
           index = 5
   )
   private int changeColor(int in) {
-    if (this.client.options.monochromeLogo)
+    if (this.client.options.getMonochromeLogo().getValue())
       return in;
 
     return withAlpha(ModConfig.INSTANCE.backgroundColor, in >> 24); // Use existing transparency
@@ -92,7 +92,7 @@ public abstract class SplashOverlayMixin extends Overlay {
           ordinal = 4 // int m (or int o according to mixin apparently)
   )
   private int changeColorGl(int in) {
-    return this.client.options.monochromeLogo ? in : ModConfig.INSTANCE.backgroundColor;
+    return this.client.options.getMonochromeLogo().getValue() ? in : ModConfig.INSTANCE.backgroundColor;
   }
 
   // Render before third getWindow to render before the logo

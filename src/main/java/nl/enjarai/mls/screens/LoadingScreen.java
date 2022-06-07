@@ -159,7 +159,7 @@ public abstract class LoadingScreen {
             matrices.push();
             matrices.translate(x + offsetX, y + offsetY, 0);
 
-            Matrix4f matrix = matrices.peek().getModel();
+            Matrix4f matrix = matrices.peek().getPositionMatrix();
             matrix.multiply(new Quaternion(0.0f, 0.0f, (float) rot, true));
             matrix.multiply(Matrix4f.scale((float) scale, (float) scale, (float) scale));
 
