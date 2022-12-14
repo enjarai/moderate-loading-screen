@@ -44,12 +44,11 @@ public class ModMenuIntegration implements ModMenuApi {
         return parent -> {
             ConfigScreenProvider<ModConfig> supplier = (ConfigScreenProvider<ModConfig>) AutoConfig.getConfigScreen(ModConfig.class, parent);
             supplier.setBuildFunction(builder -> {
-                builder.setAfterInitConsumer(screen -> {
-                    screen.addDrawableChild(new ButtonWidget(screen.width - 104, 4, 100, 20, Text.translatable("text.moderate-loading-screen.testButton"), button -> {
-                        ((ConfigScreen) screen).saveAll(false);
-                        MinecraftClient.getInstance().reloadResources();
-                    }));
-                });
+                builder.setAfterInitConsumer(screen -> screen.addDrawableChild(
+                  ButtonWidget.builder(Text.translatable("text.moderate-loading-screen.testButton"), button -> {
+                      ((ConfigScreen) screen).saveAll(false);
+                      MinecraftClient.getInstance().reloadResources();
+                  }).position(screen.width - 104, 4).size(100, 20).build()));
                 return builder.build();
             });
             return supplier.get();

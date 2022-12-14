@@ -29,11 +29,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.MatrixUtil;
 import nl.enjarai.mls.ModerateLoadingScreen;
 import nl.enjarai.mls.config.ModConfig;
 import nl.enjarai.mls.mixin.DrawableHelperAccessor;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -160,8 +160,7 @@ public abstract class LoadingScreen {
             matrices.translate(x + offsetX, y + offsetY, 0);
 
             Matrix4f matrix = matrices.peek().getPositionMatrix();
-            matrix.multiply(new Quaternion(0.0f, 0.0f, (float) rot, true));
-            matrix.multiply(Matrix4f.scale((float) scale, (float) scale, (float) scale));
+            MatrixUtil.scale(matrix.rotate((float) rot * 0.017453292F, 0, 0, 1), (float) scale);
 
             double x1 = -patchSize / (double) 2;
             double y1 = -patchSize / (double) 2;
