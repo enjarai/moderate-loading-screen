@@ -27,6 +27,9 @@ package nl.enjarai.mls.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import dev.isxander.yacl.api.ConfigCategory;
+import dev.isxander.yacl.api.Option;
+import dev.isxander.yacl.api.YetAnotherConfigLib;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.gui.ConfigScreenProvider;
 import me.shedaniel.clothconfig2.api.ConfigScreen;
@@ -41,17 +44,24 @@ public class ModMenuIntegration implements ModMenuApi {
     @Override
     @SuppressWarnings("deprecation")
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> {
-            ConfigScreenProvider<ModConfig> supplier = (ConfigScreenProvider<ModConfig>) AutoConfig.getConfigScreen(ModConfig.class, parent);
-            supplier.setBuildFunction(builder -> {
-                builder.setAfterInitConsumer(screen -> screen.addDrawableChild(
-                  ButtonWidget.builder(Text.translatable("text.moderate-loading-screen.testButton"), button -> {
-                      ((ConfigScreen) screen).saveAll(false);
-                      MinecraftClient.getInstance().reloadResources();
-                  }).position(screen.width - 104, 4).size(100, 20).build()));
-                return builder.build();
-            });
-            return supplier.get();
-        };
+        return parent -> YetAnotherConfigLib.createBuilder()
+                .title(Text.of("Mod Name"))
+                .category(ConfigCategory.createBuilder()
+                        .name(Text.of("My Category"))
+                        .tooltip(Text.of("This displays when you hover over a category button")) // optional
+                        .option(Option.createBuilder(boolean.class)
+                                .name(Text.of("My Boolean Option"))
+                                .tooltip(Text.of("This option displays the basic capabilities of YetAnotherConfigLib")) // optional
+                                .binding(
+                                        true, // default
+                                        () -> this.booleanToggle, // getter
+                                        newValue -> this.booleanToggle = newValue // setter
+                                )
+                                .controller(BooleanController::new)
+                                .build())
+                        .build())
+                .save(MyConfig::save)
+                .build()
+                .generateScreen(parent);
     }
 }

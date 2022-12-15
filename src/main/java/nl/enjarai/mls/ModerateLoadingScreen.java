@@ -51,11 +51,15 @@ public class ModerateLoadingScreen implements ClientModInitializer {
     public void onInitializeClient() {
         ModConfig.init();
         if (ModConfig.INSTANCE.modIdBlacklist.isEmpty()) {
-            ModConfig.INSTANCE.modIdBlacklist.addAll(List.of(new String[]{
+            ModConfig.INSTANCE.modIdBlacklist.addAll(List.of(
                     "fabric-*",
                     "fabric"
-            }));
+            ));
         }
+    }
+
+    public static Identifier id(String path) {
+        return new Identifier(MODID, path);
     }
 
     // Construct list of mod icons, main principles copied from mod menu

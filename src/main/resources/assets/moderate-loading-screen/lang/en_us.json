@@ -1,30 +1,39 @@
 {
-  "text.moderate-loading-screen.testButton": "Preview",
-  "text.autoconfig.moderate-loading-screen.title": "§lMod-erate loading screen",
-  "text.autoconfig.moderate-loading-screen.option.backgroundColor": "Background color",
-  "text.autoconfig.moderate-loading-screen.option.backgroundColor.@Tooltip": "Determines the background color of the loading screen",
-  "text.autoconfig.moderate-loading-screen.option.logoOpacity": "Mojang logo opacity",
-  "text.autoconfig.moderate-loading-screen.option.logoOpacity.@Tooltip": "Determines the opacity of the Mojang icon from 0 to 1",
-  "text.autoconfig.moderate-loading-screen.option.barOpacity": "Loading bar opacity",
-  "text.autoconfig.moderate-loading-screen.option.barOpacity.@Tooltip": "Determines the opacity of the loading bar from 0 to 1",
-  "text.autoconfig.moderate-loading-screen.option.showTater": "Show tiny potato",
-  "text.autoconfig.moderate-loading-screen.option.showTater.@Tooltip": "If true, summons the holy tater",
-  "text.autoconfig.moderate-loading-screen.option.modsOnlyOnce": "Show every mod only once",
-  "text.autoconfig.moderate-loading-screen.option.modsOnlyOnce.@Tooltip": "If true, every mod only falls down the screen once",
-  "text.autoconfig.moderate-loading-screen.option.hideLibraries": "Hide library mods",
-  "text.autoconfig.moderate-loading-screen.option.hideLibraries.@Tooltip[0]": "Hides mods marked as with the \"Library\" badge.",
-  "text.autoconfig.moderate-loading-screen.option.hideLibraries.@Tooltip[1]": "Note: not all library mods mark themselves as such, use the blacklist to hide ones that dont.",
-  "text.autoconfig.moderate-loading-screen.option.modIdBlacklist": "Mod id blacklist",
-  "text.autoconfig.moderate-loading-screen.option.modIdBlacklist.@Tooltip[0]": "Use bash pattern matching to hide certain mods by id.",
-  "text.autoconfig.moderate-loading-screen.option.modIdBlacklist.@Tooltip[1]": "Default configuration excludes the ten million submods of Fabric Api.",
-  "text.autoconfig.moderate-loading-screen.option.iconSize": "Icon size",
-  "text.autoconfig.moderate-loading-screen.option.iconSize.@Tooltip": "Average size of falling icons",
-  "text.autoconfig.moderate-loading-screen.option.screenType": "Icon behavior",
-  "text.autoconfig.moderate-loading-screen.option.screenType.@Tooltip[0]": "Defines the behavior of falling icons.",
-  "text.autoconfig.moderate-loading-screen.option.screenType.@Tooltip[1]": "SNOWFLAKES: Icons fall down the screen like snowflakes (default)",
-  "text.autoconfig.moderate-loading-screen.option.screenType.@Tooltip[2]": "STACKING: Icons stack neatly into a grid, filling up the screen",
-  "text.autoconfig.moderate-loading-screen.option.stackingConfig": "STACKING mode options",
-  "text.autoconfig.moderate-loading-screen.option.stackingConfig.cycleSeconds": "Fill time",
-  "text.autoconfig.moderate-loading-screen.option.stackingConfig.cycleSeconds.@Tooltip[0]": "Time it takes for the screen to fill up in seconds.",
-  "text.autoconfig.moderate-loading-screen.option.stackingConfig.cycleSeconds.@Tooltip[1]": "For best results, set this to the average time it takes for your game to load."
+  "config.moderate-loading-screen": {
+    "title": "Mod-erate loading screen",
+    "option": {
+      "test_button": "Preview",
+      "background_color": "Background color",
+      "background_color.tooltip": "Determines the background color of the loading screen",
+      "logo_opacity": "Mojang logo opacity",
+      "logo_opacity.tooltip": "Determines the opacity of the Mojang icon from 0 to 1",
+      "bar_opacity": "Loading bar opacity",
+      "bar_opacity.tooltip": "Determines the opacity of the loading bar from 0 to 1",
+      "show_tater": "Show tiny potato",
+      "show_tater.tooltip": "If true, beckons the tater",
+      "mods_only_once": "Show every mod only once",
+      "mods_only_once.tooltip": "If true, every mod only falls down the screen once",
+      "hide_libraries": "Hide library mods",
+      "hide_libraries.tooltip": "Hides mods marked as with the \"Library\" badge.\nNote: not all library mods mark themselves as such, use the blacklist to hide ones that dont.",
+      "mod_id_blacklist": "Mod id blacklist",
+      "mod_id_blacklist.tooltip": "Use bash-like pattern matching to hide certain mods by id.\nDefault configuration excludes the ten million submods of Fabric Api.",
+      "icon_size": "Icon size",
+      "icon_size.tooltip": "Average size of falling icons",
+      "screen_type": "Icon behavior",
+      "screen_type.tooltip": "Defines the behavior of falling icons.\n\nSNOWFLAKES: Icons fall down the screen like snowflakes (default)\nSTACKING: Icons stack neatly into a grid, filling up the screen"
+    },
+    "type": {
+      "snowflakes": {
+        "name": "Snowflakes"
+      },
+      "stacking": {
+        "name": "Stacking",
+        "title": "STACKING mode options",
+        "option": {
+          "cycle_seconds": "Fill time",
+          "cycle_seconds.tooltip": "Time it takes for the screen to fill up in seconds.\nFor best results, set this to the average time it takes for your game to load."
+        }
+      }
+    }
+  }
 }

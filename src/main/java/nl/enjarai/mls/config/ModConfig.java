@@ -25,62 +25,66 @@
 
 package nl.enjarai.mls.config;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.isxander.yacl.api.YetAnotherConfigLib;
+import net.minecraft.util.Identifier;
+import nl.enjarai.mls.ModerateLoadingScreen;
 
-import java.util.ArrayList;
+import java.util.List;
 
-@Config(name = "moderate-loading-screen")
-public class ModConfig implements ConfigData {
-    @ConfigEntry.Gui.Excluded
+public class ModConfig implements ConfigFile<ModConfig> {
+    public static Codec<ModConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.INT.optionalFieldOf("background_color", 0x161616).forGetter(config -> config.backgroundColor),
+            Codec.FLOAT.optionalFieldOf("logo_opacity", 1f).forGetter(config -> config.logoOpacity),
+            Codec.FLOAT.optionalFieldOf("bar_opacity", 1f).forGetter(config -> config.barOpacity),
+            Codec.BOOL.optionalFieldOf("show_tater", true).forGetter(config -> config.showTater),
+            Codec.BOOL.optionalFieldOf("mods_only_once", false).forGetter(config -> config.modsOnlyOnce),
+            Codec.BOOL.optionalFieldOf("hide_libraries", false).forGetter(config -> config.hideLibraries),
+            Codec.list(Codec.STRING).optionalFieldOf("mod_id_blacklist", List.of(
+                    "fabric-*",
+                    "fabric"
+            )).forGetter(config -> config.modIdBlacklist),
+            Codec.INT.optionalFieldOf("icon_size", 48).forGetter(config -> config.iconSize),
+            Identifier.CODEC.optionalFieldOf("screen_type",
+                    ModerateLoadingScreen.id("snowflakes")
+            ).forGetter(config -> config.screenType)
+    ).apply(instance, ModConfig::new));
     public static ModConfig INSTANCE;
 
-    public static void init()
-    {
-        AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
-        INSTANCE = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+    public static void init() {
+
     }
 
-    @ConfigEntry.ColorPicker
-    @ConfigEntry.Gui.Tooltip
-    public int backgroundColor = 0x161616;
+    public ModConfig(int backgroundColor, float logoOpacity, float barOpacity, boolean showTater, boolean modsOnlyOnce, boolean hideLibraries, List<String> modIdBlacklist, int iconSize, Identifier screenType) {
+        this.backgroundColor = backgroundColor;
+        this.logoOpacity = logoOpacity;
+        this.barOpacity = barOpacity;
+        this.showTater = showTater;
+        this.modsOnlyOnce = modsOnlyOnce;
+        this.hideLibraries = hideLibraries;
+        this.modIdBlacklist = modIdBlacklist;
+        this.iconSize = iconSize;
+        this.screenType = screenType;
+    }
 
-    @ConfigEntry.BoundedDiscrete(max = 1)
-    @ConfigEntry.Gui.Tooltip
-    public float logoOpacity = 1;
+    public int backgroundColor;
+    public float logoOpacity;
+    public float barOpacity;
+    public boolean showTater;
+    public boolean modsOnlyOnce;
+    public boolean hideLibraries;
+    public List<String> modIdBlacklist;
+    public int iconSize;
+    public Identifier screenType;
 
-    @ConfigEntry.BoundedDiscrete(max = 1)
-    @ConfigEntry.Gui.Tooltip
-    public float barOpacity = 1;
+    @Override
+    public Codec<ModConfig> getCodec() {
+        return CODEC;
+    }
 
-    @ConfigEntry.Gui.Tooltip
-    public boolean showTater = true;
+    @Override
+    public void buildScreen(YetAnotherConfigLib.Builder builder) {
 
-    @ConfigEntry.Gui.Tooltip
-    public boolean modsOnlyOnce = false;
-
-    @ConfigEntry.Gui.Tooltip(count = 2)
-    public boolean hideLibraries = false;
-
-    @ConfigEntry.Gui.Tooltip(count = 2)
-    public ArrayList<String> modIdBlacklist = new ArrayList<>();
-
-    @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.BoundedDiscrete(min = 8, max = 128)
-    public int iconSize = 48;
-
-    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-    @ConfigEntry.Gui.Tooltip(count = 3)
-    public ScreenTypes screenType = ScreenTypes.SNOWFLAKES;
-
-    @ConfigEntry.Gui.CollapsibleObject()
-    public StackingConfig stackingConfig = new StackingConfig();
-    public static class StackingConfig {
-        @ConfigEntry.Gui.Tooltip(count = 2)
-        @ConfigEntry.BoundedDiscrete(min = 1, max = 60)
-        public int cycleSeconds = 20;
     }
 }

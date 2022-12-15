@@ -31,6 +31,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MatrixUtil;
 import nl.enjarai.mls.ModerateLoadingScreen;
+import nl.enjarai.mls.config.ConfigFile;
 import nl.enjarai.mls.config.ModConfig;
 import nl.enjarai.mls.mixin.DrawableHelperAccessor;
 import org.joml.Matrix4f;
@@ -38,7 +39,7 @@ import org.joml.Matrix4f;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class LoadingScreen {
+public abstract class LoadingScreen<C extends ConfigFile<C>> {
     protected final int patchSize;
     protected final MinecraftClient client;
     protected final ArrayList<Identifier> icons;
@@ -46,10 +47,13 @@ public abstract class LoadingScreen {
     protected final ArrayList<Patch> patches = new ArrayList<>();
     protected double patchTimer = 0f;
     protected boolean tater = ModConfig.INSTANCE.showTater;
+    protected final C config;
 
-    public LoadingScreen(MinecraftClient client) {
+    public LoadingScreen(MinecraftClient client, C config) {
         patchSize = ModConfig.INSTANCE.iconSize;
         this.client = client;
+
+        this.config = config;
 
         icons = ModerateLoadingScreen.compileIconList();
     }
@@ -167,7 +171,7 @@ public abstract class LoadingScreen {
             double x2 = patchSize / (double) 2;
             double y2 = patchSize / (double) 2;
 
-            DrawableHelperAccessor.loadingScreen$drawTexturedQuad(
+            DrawableHelperAccessor.moderateLoadingScreen$drawTexturedQuad(
                     matrix,
                     (int) x1, (int) x2, (int) y1, (int) y2, 0,
                     0.0f, 1.0f, 0.0f, 1.0f

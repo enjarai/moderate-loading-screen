@@ -25,20 +25,28 @@
 
 package nl.enjarai.mls.screens;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.isxander.yacl.api.ConfigCategory;
+import dev.isxander.yacl.api.Option;
+import dev.isxander.yacl.api.YetAnotherConfigLib;
+import dev.isxander.yacl.gui.controllers.slider.DoubleSliderController;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import nl.enjarai.mls.config.ConfigFile;
 import nl.enjarai.mls.config.ModConfig;
 
 import java.util.HashMap;
 
-public class StackingScreen extends LoadingScreen {
+public class StackingScreen extends LoadingScreen<StackingScreen.Config> {
     protected final HashMap<Double, Double> stacksHeight = new HashMap<>();
     protected final HashMap<Integer, Integer> patchesInColumn = new HashMap<>();
     protected double scroll = 0;
     protected double scrollDelta = 0;
 
-    public StackingScreen(MinecraftClient client) {
-        super(client);
+    public StackingScreen(MinecraftClient client, Config config) {
+        super(client, config);
     }
 
     @Override
@@ -121,6 +129,36 @@ public class StackingScreen extends LoadingScreen {
                     stacksHeight.put(patch.x, patch.y - patchSize);
                 }
             }
+        }
+    }
+
+    public static class Config implements ConfigFile<Config> {
+        public static final Codec<Config> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.DOUBLE.optionalFieldOf("cycle_seconds", 20.0).forGetter(config -> config.cycleSeconds)
+        ).apply(instance, Config::new));
+
+        public double cycleSeconds;
+
+        private Config(double cycleSeconds) {
+            this.cycleSeconds = cycleSeconds;
+        }
+
+        @Override
+        public Codec<Config> getCodec() {
+            return CODEC;
+        }
+
+        @Override
+        public void buildScreen(YetAnotherConfigLib.Builder builder) {
+            builder.category(ConfigCategory.createBuilder()
+                    .name(Text.translatable("config.moderate-loading-screen.type.stacking.title"))
+                    .option(Option.createBuilder(Double.class)
+                            .name(Text.translatable("config.moderate-loading-screen.type.stacking.option.cycle_seconds"))
+                            .tooltip(Text.translatable("config.moderate-loading-screen.type.stacking.option.cycle_seconds.tooltip"))
+                            .binding(20.0, () -> cycleSeconds, value -> cycleSeconds = value)
+                            .controller(option -> new DoubleSliderController(option, 1.0, 120.0, 1.0))
+                            .build())
+                    .build());
         }
     }
 }

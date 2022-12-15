@@ -25,16 +25,19 @@
 
 package nl.enjarai.mls.screens;
 
+import com.mojang.serialization.Codec;
+import dev.isxander.yacl.api.YetAnotherConfigLib;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
+import nl.enjarai.mls.config.ConfigFile;
 
-public class SnowFlakesScreen extends LoadingScreen {
+public class SnowFlakesScreen extends LoadingScreen<SnowFlakesScreen.Config> {
 
-  public SnowFlakesScreen(MinecraftClient client) {
-      super(client);
-  }
+    public SnowFlakesScreen(MinecraftClient client, Config config) {
+        super(client, config);
+    }
 
-  @Override
+    @Override
   public void createPatch(Identifier texture) {
       patches.add(new Patch(
               random.nextDouble() * this.client.getWindow().getScaledWidth() + getOffsetX(),
@@ -45,5 +48,19 @@ public class SnowFlakesScreen extends LoadingScreen {
               random.nextDouble() / 2 + 0.5,
               texture, patchSize
       ));
+  }
+
+  public static class Config implements ConfigFile<Config> {
+      public static final Codec<Config> CODEC = Codec.unit(Config::new);
+
+      @Override
+      public Codec<Config> getCodec() {
+          return CODEC;
+      }
+
+      @Override
+      public void buildScreen(YetAnotherConfigLib.Builder builder) {
+          // no options means no screen
+      }
   }
 }

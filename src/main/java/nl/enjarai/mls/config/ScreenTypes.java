@@ -25,7 +25,34 @@
 
 package nl.enjarai.mls.config;
 
-public enum ScreenTypes {
-    SNOWFLAKES(),
-    STACKING()
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import nl.enjarai.mls.ModerateLoadingScreen;
+import nl.enjarai.mls.screens.LoadingScreen;
+import nl.enjarai.mls.screens.SnowFlakesScreen;
+import nl.enjarai.mls.screens.StackingScreen;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ScreenTypes {
+    private static final Map<Identifier, ScreenType<?, ?>> SCREENS = new HashMap<>();
+
+    static <C extends ConfigFile<C>, T extends LoadingScreen<C>> ScreenType<C, T> register(Identifier id, ScreenType<C, T> type) {
+        SCREENS.put(id, type);
+        return type;
+    }
+
+    static ScreenType<?, ?> get(Identifier id) {
+        return SCREENS.get(id);
+    }
+
+    public static final ScreenType<SnowFlakesScreen.Config, SnowFlakesScreen> SNOWFLAKES = register(ModerateLoadingScreen.id("snowflakes"), new ScreenType<>(
+            SnowFlakesScreen.Config.CODEC, SnowFlakesScreen::new,
+            Text.translatable("config.moderate-loading-screen.type.snowflakes.name")
+    ));
+    public static final ScreenType<StackingScreen.Config, StackingScreen> STACKING = register(ModerateLoadingScreen.id("stacking"), new ScreenType<>(
+            StackingScreen.Config.CODEC, StackingScreen::new,
+            Text.translatable("config.moderate-loading-screen.type.stacking.name")
+    ));
 }
