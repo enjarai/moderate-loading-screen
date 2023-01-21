@@ -52,7 +52,7 @@ public class ModConfigDef {
 
     public boolean hideLibraries = false;
 
-    public ArrayList<String> modIdBlacklist = new ArrayList<>(List.of(
+    public List<String> modIdBlacklist = new ArrayList<>(List.of(
             "fabric-*",
             "fabric"
     ));
