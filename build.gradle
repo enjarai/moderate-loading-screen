@@ -8,9 +8,12 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
+  maven { url "https://maven.enjarai.nl/releases" }
+  maven { url "https://maven.enjarai.nl/mirrors" }
   maven { url "https://maven.quiltmc.org/repository/release/" }
   maven { url "https://maven.terraformersmc.com" }
   maven { url "https://maven.shedaniel.me/" }
+  maven { url 'https://maven.wispforest.io' }
 }
 
 dependencies {
@@ -22,14 +25,17 @@ dependencies {
   // Fabric API. This is technically optional, but you probably want it anyway.
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-  // Mod Menu integration.
-  modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-
-  // Cloth Config
-  modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+  // Cicada for useless inter-mod communication.
+  include modImplementation("nl.enjarai:cicada-lib:${project.cicada_version}") {
     exclude group: "net.fabricmc.fabric-api"
   }
-//  modApi "me.shedaniel.cloth.api:cloth-client-events-v0:${project.cloth_api_version}"
+
+  // OwO for config.
+  annotationProcessor modImplementation("io.wispforest:owo-lib:${project.owo_version}")
+  include "io.wispforest:owo-sentinel:${project.owo_version}"
+
+  // Mod Menu integration.
+  modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
 processResources {

@@ -27,7 +27,7 @@ package nl.enjarai.mls.screens;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
-import nl.enjarai.mls.config.ModConfig;
+import nl.enjarai.mls.ModerateLoadingScreen;
 
 import java.util.HashMap;
 
@@ -36,6 +36,7 @@ public class StackingScreen extends LoadingScreen {
     protected final HashMap<Integer, Integer> patchesInColumn = new HashMap<>();
     protected double scroll = 0;
     protected double scrollDelta = 0;
+    private final int cycleSeconds = ModerateLoadingScreen.CONFIG.stackingConfig.cycleSeconds();
 
     public StackingScreen(MinecraftClient client) {
         super(client);
@@ -52,7 +53,7 @@ public class StackingScreen extends LoadingScreen {
                     0, 0, 8 * getPatchesPerSecond(),
                     0, 1.0, texture, patchSize
             ));
-            patchesInColumn.compute(column, (k, v) -> (v == null) ? 1 : v+1);
+            patchesInColumn.compute(column, (k, v) -> (v == null) ? 1 : v + 1);
         }
     }
 
@@ -83,7 +84,7 @@ public class StackingScreen extends LoadingScreen {
     protected double getPatchesPerSecond() {
         return ((client.getWindow().getScaledWidth() / (double) patchSize + 1) *
                 (client.getWindow().getScaledHeight() / (double) patchSize + 1))
-                / ModConfig.INSTANCE.stackingConfig.cycleSeconds / 2;
+                / cycleSeconds / 2;
     }
 
     @Override

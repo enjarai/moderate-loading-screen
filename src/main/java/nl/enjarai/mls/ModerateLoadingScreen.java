@@ -41,27 +41,20 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class ModerateLoadingScreen implements ClientModInitializer {
     public static final String MODID = "moderate-loading-screen";
+    public static final ModConfig CONFIG = ModConfig.createAndLoad();
 
     @Override
     public void onInitializeClient() {
-        ModConfig.init();
-        if (ModConfig.INSTANCE.modIdBlacklist.isEmpty()) {
-            ModConfig.INSTANCE.modIdBlacklist.addAll(List.of(new String[]{
-                    "fabric-*",
-                    "fabric"
-            }));
-        }
     }
 
     // Construct list of mod icons, main principles copied from mod menu
     public static ArrayList<Identifier> compileIconList() {
         ArrayList<String> blacklistRegex = new ArrayList<>();
-        for (String i : ModConfig.INSTANCE.modIdBlacklist) {
+        for (String i : CONFIG.modIdBlacklist()) {
             blacklistRegex.add(createRegexFromGlob(i));
         }
 
@@ -81,7 +74,7 @@ public class ModerateLoadingScreen implements ClientModInitializer {
             }
 
             // Ignore libraries if that option is enabled
-            if (ModConfig.INSTANCE.hideLibraries) {
+            if (CONFIG.hideLibraries()) {
                 CustomValue modObj = metadata.getCustomValue("modmenu");
                 if (modObj != null && modObj.getAsObject().containsKey("badges")) {
                     for (CustomValue badge : modObj.getAsObject().get("badges").getAsArray()) {

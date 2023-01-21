@@ -31,7 +31,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MatrixUtil;
 import nl.enjarai.mls.ModerateLoadingScreen;
-import nl.enjarai.mls.config.ModConfig;
 import nl.enjarai.mls.mixin.DrawableHelperAccessor;
 import org.joml.Matrix4f;
 
@@ -39,16 +38,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class LoadingScreen {
-    protected final int patchSize;
+    protected final int patchSize = ModerateLoadingScreen.CONFIG.iconSize();
     protected final MinecraftClient client;
     protected final ArrayList<Identifier> icons;
     protected final Random random = new Random();
     protected final ArrayList<Patch> patches = new ArrayList<>();
     protected double patchTimer = 0f;
-    protected boolean tater = ModConfig.INSTANCE.showTater;
+    protected boolean tater = ModerateLoadingScreen.CONFIG.showTater();
+    protected boolean modsOnlyOnce = ModerateLoadingScreen.CONFIG.modsOnlyOnce();
 
     public LoadingScreen(MinecraftClient client) {
-        patchSize = ModConfig.INSTANCE.iconSize;
         this.client = client;
 
         icons = ModerateLoadingScreen.compileIconList();
@@ -75,7 +74,7 @@ public abstract class LoadingScreen {
             if (patchTimer < 0f && !ending) {
                 Identifier icon = getNextTexture();
 
-                if (ModConfig.INSTANCE.modsOnlyOnce) {
+                if (modsOnlyOnce) {
                     icons.remove(icon);
                 }
                 createPatch(icon);

@@ -17,9 +17,6 @@
   "entrypoints": {
     "client": [
       "nl.enjarai.mls.ModerateLoadingScreen"
-    ],
-    "modmenu": [
-      "nl.enjarai.mls.config.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -29,8 +26,7 @@
     "modmenu": "*"
   },
   "depends": {
-    "fabric": "*",
-    "cloth-config": "*"
+    "fabric": "*"
   },
 
   "accessWidener" : "moderate-loading-screen.accesswidener",
