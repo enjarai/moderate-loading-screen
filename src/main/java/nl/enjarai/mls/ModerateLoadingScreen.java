@@ -53,14 +53,17 @@ public class ModerateLoadingScreen implements ClientModInitializer {
 
             // Ignore libraries if that option is enabled
             if (CONFIG.hideLibraries()) {
-                CustomValue modObj = metadata.getCustomValue("modmenu");
-                if (modObj != null && modObj.getAsObject().containsKey("badges")) {
-                    for (CustomValue badge : modObj.getAsObject().get("badges").getAsArray()) {
-                        if (Objects.equals(badge.getAsString(), "library")) {
-                            texture = null;
-                            break;
+                try {
+                    CustomValue modObj = metadata.getCustomValue("modmenu");
+                    if (modObj != null && modObj.getAsObject().containsKey("badges")) {
+                        for (CustomValue badge : modObj.getAsObject().get("badges").getAsArray()) {
+                            if (Objects.equals(badge.getAsString(), "library")) {
+                                texture = null;
+                                break;
+                            }
                         }
                     }
+                } catch (Throwable ignored) {
                 }
             }
 
