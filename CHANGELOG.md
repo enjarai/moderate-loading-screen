@@ -1,2 +1,1 @@
-- Finally updated to 1.19.3
-- Switched to oωo for config
+- Updated to 1.19.4
