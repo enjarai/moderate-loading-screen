@@ -26,7 +26,8 @@
     "modmenu": "*"
   },
   "depends": {
-    "fabric-api": "*"
+    "fabric-api": "*",
+    "owo-lib": "*"
   },
 
   "accessWidener" : "moderate-loading-screen.accesswidener",
