@@ -90,7 +90,6 @@ public abstract class LoadingScreen {
         RenderSystem.defaultBlendFunc();
 
         for (Patch patch : patches) {
-            RenderSystem.setShaderTexture(0, patch.texture);
             patch.render(context, getOffsetX(), getOffsetY());
         }
     }
