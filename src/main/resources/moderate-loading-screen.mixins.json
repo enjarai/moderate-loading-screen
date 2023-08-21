@@ -4,7 +4,7 @@
   "package": "nl.enjarai.mls.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "DrawableHelperAccessor",
+    "DrawContextAccessor",
     "SplashOverlayMixin"
   ],
   "injectors": {
