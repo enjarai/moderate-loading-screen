@@ -79,7 +79,7 @@ public abstract class SplashOverlayMixin extends Overlay {
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
     private void moderateLoadingScreen$renderPatches(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci,
-                                                     int i, int j, long l, float f, float g, float h) {
+                                                     int i, int j, long l, float f) {
         moderateLoadingScreen$loadingScreen.renderPatches(context, delta, f >= 1.0f);
     }
 
