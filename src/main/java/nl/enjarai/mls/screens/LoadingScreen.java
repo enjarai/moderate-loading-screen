@@ -2,11 +2,11 @@ package nl.enjarai.mls.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MatrixUtil;
 import nl.enjarai.mls.ModerateLoadingScreen;
-import nl.enjarai.mls.mixin.DrawableHelperAccessor;
+import nl.enjarai.mls.mixin.DrawContextAccessor;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public abstract class LoadingScreen {
         }
     }
 
-    public void renderPatches(MatrixStack matrices, float delta, boolean ending) {
+    public void renderPatches(DrawContext context, float delta, boolean ending) {
         // spike prevention
         if (delta < 2.0f)
             updatePatches(delta, ending);
@@ -91,7 +91,7 @@ public abstract class LoadingScreen {
 
         for (Patch patch : patches) {
             RenderSystem.setShaderTexture(0, patch.texture);
-            patch.render(matrices, getOffsetX(), getOffsetY());
+            patch.render(context, getOffsetX(), getOffsetY());
         }
     }
 
@@ -129,11 +129,11 @@ public abstract class LoadingScreen {
             rot += rotSpeed * delta;
         }
 
-        public void render(MatrixStack matrices, double offsetX, double offsetY) {
-            matrices.push();
-            matrices.translate(x + offsetX, y + offsetY, 0);
+        public void render(DrawContext context, double offsetX, double offsetY) {
+            context.getMatrices().push();
+            context.getMatrices().translate(x + offsetX, y + offsetY, 0);
 
-            Matrix4f matrix = matrices.peek().getPositionMatrix();
+            Matrix4f matrix = context.getMatrices().peek().getPositionMatrix();
             MatrixUtil.scale(matrix.rotate((float) rot * 0.017453292F, 0, 0, 1), (float) scale);
 
             double x1 = -patchSize / (double) 2;
@@ -141,13 +141,13 @@ public abstract class LoadingScreen {
             double x2 = patchSize / (double) 2;
             double y2 = patchSize / (double) 2;
 
-            DrawableHelperAccessor.loadingScreen$drawTexturedQuad(
-                    matrix,
+            ((DrawContextAccessor)context).loadingScreen$drawTexturedQuad(
+                    texture,
                     (int) x1, (int) x2, (int) y1, (int) y2, 0,
                     0.0f, 1.0f, 0.0f, 1.0f
             );
 
-            matrices.pop();
+            context.getMatrices().pop();
         }
     }
 }
