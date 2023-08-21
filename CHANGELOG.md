@@ -1,1 +1,1 @@
-- Properly declare owo-lib dependency
+- Updated to 1.20.1 (Thanks @forkiesassds!)
