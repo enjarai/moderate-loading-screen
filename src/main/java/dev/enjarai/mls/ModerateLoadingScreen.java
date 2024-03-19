@@ -1,5 +1,6 @@
-package nl.enjarai.mls;
+package dev.enjarai.mls;
 
+import dev.enjarai.mls.config.ModConfig;
 import io.wispforest.owo.config.ui.ConfigScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -10,8 +11,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
-import nl.enjarai.mls.config.ModConfig;
-import nl.enjarai.mls.config.ModConfigScreen;
+import dev.enjarai.mls.config.ModConfigScreen;
 import org.apache.commons.lang3.Validate;
 
 import java.io.InputStream;

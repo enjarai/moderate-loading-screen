@@ -1,4 +1,4 @@
-package nl.enjarai.mls.config;
+package dev.enjarai.mls.config;
 
 import io.wispforest.owo.config.ConfigWrapper;
 import io.wispforest.owo.config.ui.ConfigScreen;
