@@ -1,1 +1,2 @@
-- Updated to 1.20.1 (Thanks @forkiesassds!)
+- Ported to stonecutter multiversion framework (Quite splendid @KikuGie)
+  - This means 1.20.2+ is now also supported!

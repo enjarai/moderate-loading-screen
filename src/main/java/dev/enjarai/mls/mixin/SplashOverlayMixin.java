@@ -50,7 +50,7 @@ public abstract class SplashOverlayMixin extends Overlay {
         };
     }
 
-    /*? if >=1.20.2 {*//*
+    /*? if >=1.20.1 {*//*
     // Replace the color used for the background fill of the splash screen
     @ModifyArg(method = "render(Lnet/minecraft/client/gui/DrawContext;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(Lnet/minecraft/client/render/RenderLayer;IIIII)V"), index = 5)
     private int moderateLoadingScreen$changeColor(int in) {

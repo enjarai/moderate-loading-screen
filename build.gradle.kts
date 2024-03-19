@@ -80,7 +80,7 @@ java {
 
 publishMods {
     file = tasks.remapJar.get().archiveFile
-    displayName = "${property("mod.version")} for ${property("deps.minecraft")}"
+    displayName = "${mod.version} for $mcVersion"
     version = project.version.toString()
     changelog = rootProject.file("CHANGELOG.md").readText()
     type = STABLE
