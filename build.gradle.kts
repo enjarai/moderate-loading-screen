@@ -1,5 +1,6 @@
 plugins {
     id("fabric-loom")
+    id("me.modmuss50.mod-publish-plugin") version "0.4.4"
 }
 
 class ModData {
@@ -23,6 +24,7 @@ repositories {
     maven("https://maven.terraformersmc.com")
     maven("https://maven.shedaniel.me/")
     maven("https://maven.wispforest.io")
+    maven("https://maven.kikugie.dev/releases")
 }
 
 dependencies {
@@ -36,6 +38,8 @@ dependencies {
     })
     annotationProcessor(modImplementation("io.wispforest:owo-lib:${property("deps.owo")}")!!)
     include("io.wispforest:owo-sentinel:${property("deps.owo")}")
+
+    include(modRuntimeOnly("dev.kikugie:crash-pipe:0.1.0")!!)
 }
 
 loom {
@@ -72,4 +76,66 @@ tasks.processResources {
 
 java {
     withSourcesJar()
+}
+
+publishMods {
+    file = tasks.remapJar.get().archiveFile
+    displayName = "${property("mod.version")} for ${property("deps.minecraft")}"
+    version = project.version.toString()
+    changelog = rootProject.file("CHANGELOG.md").readText()
+    type = STABLE
+    modLoaders.add("fabric")
+
+    val min = property("mod.target_min").toString()
+    val max = property("mod.target_max").toString()
+
+    if (providers.gradleProperty("enjaraiModrinthToken").isPresent) {
+        modrinth {
+            projectId = property("mod.modrinth").toString()
+            accessToken = providers.gradleProperty("enjaraiModrinthToken").get()
+
+            if (min == max) {
+                minecraftVersions.add(min)
+            } else {
+                minecraftVersionRange {
+                    start = min
+                    end = max
+                }
+            }
+
+            requires {
+                slug = "fabric-api"
+            }
+        }
+    }
+
+    if (providers.gradleProperty("enjaraiCurseforgeToken").isPresent) {
+        curseforge {
+            projectId = property("mod.curseforge").toString()
+            accessToken = providers.gradleProperty("enjaraiCurseforgeToken").get()
+
+            if (min == max) {
+                minecraftVersions.add(min)
+            } else {
+                minecraftVersionRange {
+                    start = min
+                    end = max
+                }
+            }
+
+            requires {
+                slug = "fabric-api"
+            }
+        }
+    }
+
+    if (providers.gradleProperty("enjaraiGithubToken").isPresent) {
+        github {
+            repository = property("mod.github").toString()
+            accessToken = providers.gradleProperty("enjaraiGithubToken").get()
+
+            commitish = "main" // property('git_branch')
+            tagName = project.version.toString()
+        }
+    }
 }
