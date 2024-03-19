@@ -15,4 +15,4 @@ jobs:
           distribution: adopt
           java-version: 17
           cache: gradle
-      - run: ./gradlew build
+      - run: ./gradlew chiseledBuild

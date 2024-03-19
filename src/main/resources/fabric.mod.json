@@ -16,7 +16,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "nl.enjarai.mls.ModerateLoadingScreen"
+      "dev.enjarai.mls.ModerateLoadingScreen"
     ]
   },
   "mixins": [
@@ -26,7 +26,6 @@
     "modmenu": "*"
   },
   "depends": {
-    "fabric-api": "*",
     "owo-lib": "*"
   },
 

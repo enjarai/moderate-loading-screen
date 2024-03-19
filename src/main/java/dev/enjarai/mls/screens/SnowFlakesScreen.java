@@ -1,4 +1,4 @@
-package nl.enjarai.mls.screens;
+package dev.enjarai.mls.screens;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;

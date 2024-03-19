@@ -1,4 +1,4 @@
-package nl.enjarai.mls.config;
+package dev.enjarai.mls.config;
 
 import io.wispforest.owo.config.annotation.*;
 import io.wispforest.owo.ui.core.Color;
