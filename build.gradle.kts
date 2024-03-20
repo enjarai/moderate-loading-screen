@@ -31,6 +31,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${mcVersion}")
     mappings("net.fabricmc:yarn:${mcVersion}+build.${property("deps.yarn_build")}:v2")
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fapi")}")
     modImplementation("com.terraformersmc:modmenu:${property("deps.modmenu")}")
 
     include(modImplementation("nl.enjarai:cicada-lib:${property("deps.cicada")}") {

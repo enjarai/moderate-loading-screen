@@ -1,2 +1,1 @@
-- Ported to stonecutter multiversion framework (Quite splendid @KikuGie)
-  - This means 1.20.2+ is now also supported!
+- Fix lang files, the config screen is actually readable now!
