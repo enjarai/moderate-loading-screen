@@ -24,7 +24,7 @@ public class StackingScreen extends LoadingScreen {
         if (column != null) {
             patches.add(new Patch(
                     column * patchSize - (patchSize / 2d),
-                    -patchSize - client.getWindow().getScaledHeight() + scroll,
+                    -patchSize - getScreenHeight() + scroll,
                     0, 0, 8 * getPatchesPerSecond(),
                     0, 1.0, texture, patchSize
             ));
@@ -33,8 +33,8 @@ public class StackingScreen extends LoadingScreen {
     }
 
     protected Integer pickPatchColumn() {
-        int width = (int) Math.ceil(client.getWindow().getScaledWidth() / (double) patchSize);
-        int height = (int) Math.ceil(client.getWindow().getScaledHeight() / (double) patchSize);
+        int width = (int) Math.ceil(getScreenWidth() / (double) patchSize);
+        int height = (int) Math.ceil(getScreenHeight() / (double) patchSize);
 
         double totalWeight = 0.0;
         for (int i = 0; i <= width; i++) {
@@ -57,8 +57,8 @@ public class StackingScreen extends LoadingScreen {
     }
 
     protected double getPatchesPerSecond() {
-        return ((client.getWindow().getScaledWidth() / (double) patchSize + 1) *
-                (client.getWindow().getScaledHeight() / (double) patchSize + 1))
+        return ((getScreenWidth() / (double) patchSize + 1) *
+                (getScreenHeight() / (double) patchSize + 1))
                 / cycleSeconds / 2;
     }
 
@@ -69,12 +69,12 @@ public class StackingScreen extends LoadingScreen {
 
     @Override
     protected double getOffsetX() {
-        return client.getWindow().getScaledWidth() % patchSize / 2.0;
+        return getScreenWidth() % patchSize / 2.0;
     }
 
     @Override
     protected double getOffsetY() {
-        return scroll + client.getWindow().getScaledHeight();
+        return scroll + getScreenHeight();
     }
 
     @Override

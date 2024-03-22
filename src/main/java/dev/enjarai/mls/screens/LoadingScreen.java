@@ -3,10 +3,12 @@ package dev.enjarai.mls.screens;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.enjarai.mls.DrawContextWrapper;
 import dev.enjarai.mls.ModerateLoadingScreen;
+import dev.enjarai.mls.config.Orientation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MatrixUtil;
+import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.Random;
 
 public abstract class LoadingScreen {
     protected final int patchSize = ModerateLoadingScreen.CONFIG.iconSize();
+    protected final Orientation orientation = ModerateLoadingScreen.CONFIG.orientation();
     protected final MinecraftClient client;
     protected final ArrayList<Identifier> icons;
     protected final Random random = new Random();
@@ -71,6 +74,14 @@ public abstract class LoadingScreen {
         return 0;
     }
 
+    protected int getScreenWidth() {
+        return orientation.switchAxes ? client.getWindow().getScaledHeight() : client.getWindow().getScaledWidth();
+    }
+
+    protected int getScreenHeight() {
+        return orientation.switchAxes ? client.getWindow().getScaledWidth() : client.getWindow().getScaledHeight();
+    }
+
     protected void processPhysics(float delta, boolean ending) {
         for (Patch patch : patches) {
             if (ending)
@@ -95,7 +106,7 @@ public abstract class LoadingScreen {
         }
     }
 
-    protected static class Patch {
+    protected class Patch {
         protected double x, y, rot;
         protected final Identifier texture;
 
@@ -132,18 +143,34 @@ public abstract class LoadingScreen {
         public void render(DrawContextWrapper wrapper, double offsetX, double offsetY) {
             MatrixStack matrices = wrapper.matrices();
             matrices.push();
-            matrices.translate(x + offsetX, y + offsetY, 0);
+            if (orientation.switchAxes) {
+                matrices.translate(
+                        perhapsInvert(y + offsetY, getScreenHeight()),
+                        perhapsInvert(x + offsetX, getScreenWidth()),
+                        0
+                );
+            } else {
+                matrices.translate(
+                        perhapsInvert(x + offsetX, getScreenWidth()),
+                        perhapsInvert(y + offsetY, getScreenHeight()),
+                        0
+                );
+            }
 
             Matrix4f matrix = matrices.peek().getPositionMatrix();
             MatrixUtil.scale(matrix.rotate((float) rot * 0.017453292F, 0, 0, 1), (float) scale);
 
-            double x1 = -patchSize / (double) 2;
-            double y1 = -patchSize / (double) 2;
-            double x2 = patchSize / (double) 2;
-            double y2 = patchSize / (double) 2;
+            double x1 = -patchSize / 2d;
+            double y1 = -patchSize / 2d;
+            double x2 = patchSize / 2d;
+            double y2 = patchSize / 2d;
 
             wrapper.drawTexturedQuad(texture, (int) x1, (int) x2, (int) y1, (int) y2);
             matrices.pop();
+        }
+
+        private double perhapsInvert(double value, int fullSize) {
+            return orientation.reverseAxes ? fullSize - value : value;
         }
     }
 }

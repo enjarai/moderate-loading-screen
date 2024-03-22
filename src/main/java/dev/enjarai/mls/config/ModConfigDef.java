@@ -38,6 +38,8 @@ public class ModConfigDef {
 
     public ScreenTypes screenType = ScreenTypes.SNOWFLAKES;
 
+    public Orientation orientation = Orientation.DOWN;
+
     @Nest
     public StackingConfig stackingConfig = new StackingConfig();
 

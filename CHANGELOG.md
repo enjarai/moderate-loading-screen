@@ -1,1 +1,1 @@
-- Fix lang files, the config screen is actually readable now!
+- Added a config option to change the fall direction of mod icons.
