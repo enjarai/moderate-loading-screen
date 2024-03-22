@@ -34,9 +34,9 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fapi")}")
     modImplementation("com.terraformersmc:modmenu:${property("deps.modmenu")}")
 
-    include(modImplementation("nl.enjarai:cicada-lib:${property("deps.cicada")}") {
+    modImplementation("nl.enjarai:cicada-lib:${property("deps.cicada")}") {
         exclude(group = "net.fabricmc.fabric-api")
-    })
+    }
     annotationProcessor(modImplementation("io.wispforest:owo-lib:${property("deps.owo")}")!!)
     include("io.wispforest:owo-sentinel:${property("deps.owo")}")
 
@@ -107,6 +107,9 @@ publishMods {
             requires {
                 slug = "fabric-api"
             }
+            requires {
+                slug = "cicada"
+            }
         }
     }
 
@@ -126,6 +129,9 @@ publishMods {
 
             requires {
                 slug = "fabric-api"
+            }
+            requires {
+                slug = "cicada"
             }
         }
     }
