@@ -40,7 +40,7 @@ dependencies {
     annotationProcessor(modImplementation("io.wispforest:owo-lib:${property("deps.owo")}")!!)
     include("io.wispforest:owo-sentinel:${property("deps.owo")}")
 
-    include(modRuntimeOnly("dev.kikugie:crash-pipe:0.1.0")!!)
+//    include(modRuntimeOnly("dev.kikugie:crash-pipe:0.1.0")!!)
 }
 
 loom {
