@@ -1,1 +1,1 @@
-- Added a config option to change the fall direction of mod icons.
+- No more metal pipe sfx on crash :crabrave:
