@@ -82,6 +82,10 @@ tasks.processResources {
 }
 
 java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion)
+    }
+
     withSourcesJar()
 }
 
