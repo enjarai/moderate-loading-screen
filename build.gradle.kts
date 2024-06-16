@@ -27,6 +27,12 @@ repositories {
     maven("https://maven.kikugie.dev/releases")
 }
 
+val javaVersion : Int = (property("deps.java") as String).toInt()
+
+tasks.withType<JavaCompile> {
+    options.release = javaVersion
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:${mcVersion}")
     mappings("net.fabricmc:yarn:${mcVersion}+build.${property("deps.yarn_build")}:v2")
@@ -76,6 +82,10 @@ tasks.processResources {
 }
 
 java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion)
+    }
+
     withSourcesJar()
 }
 

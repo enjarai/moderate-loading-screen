@@ -68,7 +68,7 @@ public class ModerateLoadingScreen implements ClientModInitializer {
             }
 
             if (texture != null) {
-                Identifier iconLocation = new Identifier(MODID, metadata.getId() + "_icon");
+                Identifier iconLocation = id(metadata.getId() + "_icon");
 
                 MinecraftClient.getInstance().getTextureManager().registerTexture(iconLocation, texture);
                 result.add(iconLocation);
@@ -110,6 +110,10 @@ public class ModerateLoadingScreen implements ClientModInitializer {
     }
 
     public static Identifier id(String path) {
+        /*? if >=1.21 {*//*
+        return Identifier.of(MODID, path);
+        *//*?} else {*/
         return new Identifier(MODID, path);
+        /*?} */
     }
 }

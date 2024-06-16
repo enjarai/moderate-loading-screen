@@ -37,7 +37,7 @@ public abstract class LoadingScreen {
         // Summon the holy tater if enabled
         if (tater) {
             tater = false;
-            return new Identifier(ModerateLoadingScreen.MODID, "textures/gui/tiny_potato.png");
+            return ModerateLoadingScreen.id("textures/gui/tiny_potato.png");
         }
 
         return icons.get(random.nextInt(icons.size()));

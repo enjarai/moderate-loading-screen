@@ -26,4 +26,15 @@ public class ModConfigScreen extends ConfigScreen {
             MinecraftClient.getInstance().reloadResources();
         });
     }
+
+    /*? if >=1.20.6 {*//*
+    @Override
+    public void renderBackground(net.minecraft.client.gui.DrawContext context, int mouseX, int mouseY, float delta) {
+        if (client.world == null) {
+            renderPanoramaBackground(context, delta);
+        }
+
+        renderDarkening(context);
+    }
+    *//*? }*/
 }
