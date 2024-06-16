@@ -148,7 +148,7 @@
             <horizontal-alignment>center</horizontal-alignment>
 
             <surface>
-                <flat>#77000000</flat>
+                <options-background/>
             </surface>
 
             <sizing>
