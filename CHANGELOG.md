@@ -1,1 +1,1 @@
-- No more metal pipe sfx on crash :crabrave:
+- Updated to support 1.20.6 and 1.21.
