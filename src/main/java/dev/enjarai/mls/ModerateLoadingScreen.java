@@ -110,10 +110,10 @@ public class ModerateLoadingScreen implements ClientModInitializer {
     }
 
     public static Identifier id(String path) {
-        /*? if >=1.21 {*//*
+        /*? if >=1.21 {*/
         return Identifier.of(MODID, path);
-        *//*?} else {*/
+        /*?} else {*//*
         return new Identifier(MODID, path);
-        /*?} */
+        *//*?} */
     }
 }

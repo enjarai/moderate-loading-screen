@@ -50,7 +50,39 @@ public abstract class SplashOverlayMixin extends Overlay {
         };
     }
 
-    /*? if >=1.20.1 {*//*
+    /*? if >=1.21.2 {*/
+    // Replace the color used for the background fill of the splash screen
+    @ModifyArg(method = "render(Lnet/minecraft/client/gui/DrawContext;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(Lnet/minecraft/client/render/RenderLayer;IIIII)V"), index = 5)
+    private int moderateLoadingScreen$changeColor(int in) {
+        if (this.client.options.getMonochromeLogo().getValue())
+            return in;
+        return withAlpha(ModerateLoadingScreen.CONFIG.backgroundColor().rgb(), in >> 24); // Use existing transparency
+    }
+
+    // For some reason Mojang decided to not use `fill` in a specific case, so we have to replace a local variable
+    @ModifyVariable(method = "render(Lnet/minecraft/client/gui/DrawContext;IIF)V", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/function/IntSupplier;getAsInt()I", ordinal = 2), ordinal = 4)
+    private int moderateLoadingScreen$changeColorGl(int in) {
+        return this.client.options.getMonochromeLogo().getValue() ? in : ModerateLoadingScreen.CONFIG.backgroundColor().rgb();
+    }
+
+    // Render before third getWindow to render before the logo
+    @Inject(method = "render(Lnet/minecraft/client/gui/DrawContext;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;getScaledWindowWidth()I", ordinal = 2), locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void moderateLoadingScreen$renderPatches(net.minecraft.client.gui.DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, int i, int j, long l, float f) {
+        moderateLoadingScreen$loadingScreen.renderPatches(new DrawContextWrapper(context), delta, f >= 1.0f);
+    }
+
+    // Modify logo transparency if needed, multiplies with the original to ensure transitions work normally
+    @ModifyArg(method = "render(Lnet/minecraft/client/gui/DrawContext;IIF)V", at = @At(value = "INVOKE", target = "net/minecraft/util/math/ColorHelper.getWhite(F)I"), index = 0)
+    private float moderateLoadingScreen$modifyLogoTransparency(float original) {
+        return original * ModerateLoadingScreen.CONFIG.logoOpacity() / 100f;
+    }
+
+    // Modify loading bar transparency if needed, again multiplying with the original
+    @ModifyArg(method = "render(Lnet/minecraft/client/gui/DrawContext;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/SplashOverlay;renderProgressBar(Lnet/minecraft/client/gui/DrawContext;IIIIF)V"), index = 5)
+    private float moderateLoadingScreen$modifyBarTransparency(float original) {
+        return original * ModerateLoadingScreen.CONFIG.barOpacity() / 100f;
+    }
+    /*?} else if >=1.20.1 {*//*
     // Replace the color used for the background fill of the splash screen
     @ModifyArg(method = "render(Lnet/minecraft/client/gui/DrawContext;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(Lnet/minecraft/client/render/RenderLayer;IIIII)V"), index = 5)
     private int moderateLoadingScreen$changeColor(int in) {
@@ -89,7 +121,7 @@ public abstract class SplashOverlayMixin extends Overlay {
     private float moderateLoadingScreen$modifyBarTransparency(float original) {
         return original * ModerateLoadingScreen.CONFIG.barOpacity() / 100f;
     }
-    *//*?} else {*/
+    *//*?} else {*//*
     // Replace the color used for the background fill of the splash screen
     @ModifyArg(
             method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V",
@@ -152,5 +184,5 @@ public abstract class SplashOverlayMixin extends Overlay {
     private float moderateLoadingScreen$modifyBarTransparency(float original) {
         return original * ModerateLoadingScreen.CONFIG.barOpacity() / 100f;
     }
-    /*?} */
+    *//*?}*/
 }

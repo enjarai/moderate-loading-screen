@@ -27,7 +27,7 @@ public class ModConfigScreen extends ConfigScreen {
         });
     }
 
-    /*? if >=1.20.6 {*//*
+    /*? if >=1.20.6 {*/
     @Override
     public void renderBackground(net.minecraft.client.gui.DrawContext context, int mouseX, int mouseY, float delta) {
         if (client.world == null) {
@@ -36,5 +36,5 @@ public class ModConfigScreen extends ConfigScreen {
 
         renderDarkening(context);
     }
-    *//*? }*/
+    /*?}*/
 }
