@@ -84,7 +84,7 @@ public class ModerateLoadingScreen implements ClientModInitializer {
             try (InputStream inputStream = Files.newInputStream(path)) {
                 NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
                 Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
-                return new NativeImageBackedTexture(image);
+                return new NativeImageBackedTexture(/*? if >1.21.4 {*/ () -> iconSource.getMetadata().getName() /*?}*/, image);
             }
 
         } catch (Throwable t) {

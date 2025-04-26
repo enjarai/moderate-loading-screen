@@ -121,8 +121,8 @@ public abstract class SplashOverlayMixin extends Overlay {
     private float moderateLoadingScreen$modifyBarTransparency(float original) {
         return original * ModerateLoadingScreen.CONFIG.barOpacity() / 100f;
     }
-    *//*?} else {*//*
-    // Replace the color used for the background fill of the splash screen
+    *//*?} else {*/
+    /*// Replace the color used for the background fill of the splash screen
     @ModifyArg(
             method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/SplashOverlay;fill(Lnet/minecraft/client/util/math/MatrixStack;IIIII)V"),
