@@ -1,5 +1,6 @@
 package dev.enjarai.mls.screens;
 
+import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.enjarai.mls.DrawContextWrapper;
 import dev.enjarai.mls.ModerateLoadingScreen;
@@ -97,8 +98,9 @@ public abstract class LoadingScreen {
             updatePatches(delta, ending);
 
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
+        /*? if <1.21.5*/ /*RenderSystem.enableBlend();*/
+        /*? if <1.21.5*/ /*RenderSystem.defaultBlendFunc();*/
+        //Likely not needed???? Other mods and minecraft code also just removed it and just did as they did before /shrug
 
         for (Patch patch : patches) {
             /*? if <1.20*/ /*RenderSystem.setShaderTexture(0, patch.texture);*/

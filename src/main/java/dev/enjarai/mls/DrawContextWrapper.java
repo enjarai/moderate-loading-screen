@@ -41,8 +41,8 @@ public class DrawContextWrapper {
                 0.0f, 1.0f, 0.0f, 1.0f
         );
     }
-    *//*?} else {*//*
-    private final MatrixStack stack;
+    *//*?} else {*/
+    /*private final MatrixStack stack;
     public DrawContextWrapper(MatrixStack stack) {
         this.stack = stack;
     }

@@ -35,8 +35,8 @@ public interface DrawContextAccessor {
             float v0,
             float v1);
 }
-*//*?} else {*//*
-@Mixin(net.minecraft.client.gui.DrawableHelper.class)
+*//*?} else {*/
+/*@Mixin(net.minecraft.client.gui.DrawableHelper.class)
 public interface DrawContextAccessor {
     @Invoker("drawTexturedQuad")
     static void loadingScreen$drawTexturedQuad(
